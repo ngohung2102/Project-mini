@@ -1,0 +1,7 @@
+Controller\CaptchaServlet.class
+Controller\RegisterController.class
+DAO\SendingMailDAO$1.class
+DAO\SendingMailDAO.class
+Controller\LoginController.class
+Model\Hashing.class
+DAO\capchaDAO.class
