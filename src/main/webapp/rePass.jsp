@@ -12,18 +12,17 @@
         <title>JSP Page</title>
     </head>
     <body>
-        Account: <input type="text" name="account"><br><br>
-        <input type="submit" value="get new pass">
-
-        <button type="button" onclick="refreshCaptcha()">recap</button>
-        <img id="captchaImg" src="captchaServlet" alt="captch"/>
-        <input type="text" name="capcha"><br><br>
-        <input type="submit" value="Dang ky">
-
+        <form action="rePass" method="post">
+            Account: <input type="text" name="account"><br><br>
+            <button type="button" onclick="refreshCaptcha()">recap</button>
+            <img id="captchaImg" src="captchaServlet" alt="captch"/>
+            <input type="text" name="capcha"><br><br>
+            <input type="submit" value="Yeu cau cap lai mat khau">
+        </form>
         <script>
-
             function refreshCaptcha() {
-                fetch('http://localhost:8000/DemoProject/captchaServlet', {
+                fetch('/SWP/captchaServlet', {
+
                     method: 'POST'
                 })
                         .then(Response => Response.blob())

@@ -1,7 +1,12 @@
 Controller\CaptchaServlet.class
 Controller\RegisterController.class
 DAO\SendingMailDAO$1.class
+DAO\AccountDAO.class
+Controller\rePassController.class
 DAO\SendingMailDAO.class
+Model\Account.class
 Controller\LoginController.class
+DAO\DBContext.class
 Model\Hashing.class
 DAO\capchaDAO.class
+.netbeans_automatic_build

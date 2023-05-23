@@ -4,7 +4,9 @@
  */
 package Controller;
 
+import DAO.AccountDAO;
 import DAO.capchaDAO;
+import Model.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +15,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 //import nl.captcha.Captcha;
 
 /**
@@ -20,6 +24,7 @@ import jakarta.servlet.http.HttpSession;
  * @author PC
  */
 @WebServlet("/login")
+
 public class LoginController extends HttpServlet {
 
     @Override
@@ -44,13 +49,19 @@ public class LoginController extends HttpServlet {
         if (request.getParameter("login") != null) {
             String acc = request.getParameter("account");
             String pass = request.getParameter("pass");
+            
             String captchaInput = request.getParameter("captcha");
             HttpSession sess = request.getSession();
             String captcha = (String) sess.getAttribute("captcha");
-            if(captcha.equals(captchaInput)){
-                request.getRequestDispatcher("rePass.jsp").forward(request, response);
+            
+            AccountDAO a = new AccountDAO();
+            boolean checkAccount = a.checkAccount(acc, pass);
+            
+            if (captcha.equals(captchaInput) && checkAccount) {
+                PrintWriter out = response.getWriter();
+                out.print("Succus");
             }
-            //check account exsit
+            
         }
 
         if (request.getParameter("signUp") != null) {
@@ -61,19 +72,6 @@ public class LoginController extends HttpServlet {
             request.getRequestDispatcher("rePass.jsp").forward(request, response);
         }
 
-        //
     }
-
-    
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+    //
 }

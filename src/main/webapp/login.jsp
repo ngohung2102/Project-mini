@@ -28,6 +28,7 @@
             <img id="captchaImg" src="captchaServlet" alt="captch"/>
             <input type="text" name="captcha"><br><br>
         </form>
+        <h4>${err}</h4>
     </center>
     
     <script>

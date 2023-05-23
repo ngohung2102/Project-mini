@@ -14,7 +14,7 @@ public class Hashing {
 
     private static final String SECRET_KEY = "mySecretKey12345"; // Replace with your secret key
 
-    public static String encrypt(String plaintext) throws Exception {
+    public String encrypt(String plaintext) throws Exception {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
 
@@ -25,7 +25,7 @@ public class Hashing {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static String decrypt(String encryptedText) throws Exception {
+    public String decrypt(String encryptedText) throws Exception {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
 
@@ -36,12 +36,4 @@ public class Hashing {
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 
-    public static void main(String[] args) throws Exception {
-            String originalText = "Hello, World!";
-            System.out.println("Original Text: " + originalText);
-            String encryptedText = encrypt(originalText);
-            System.out.println("Encrypted Text: " + encryptedText);
-            String decryptedText = decrypt(encryptedText);
-            System.out.println("Decrypted Text: " + decryptedText);
-    }
 }

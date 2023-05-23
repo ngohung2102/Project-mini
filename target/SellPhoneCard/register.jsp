@@ -14,22 +14,21 @@
     </head>
     <body>
         
-        <form action="register?capans=${capcha}" method="post">
+        <form action="register" method="post">
             Account: <input type="text" name="account" ><br><br>
             Password: <input type="text" name="pass" ><br><br>
             Email: <input type="text" name="email" ><br><br>
-
             <button type="button" onclick="refreshCaptcha()">recap</button>
-
             <img id="captchaImg" src="captchaServlet" alt="captch"/>
-            <input type="text" name="capcha"><br><br>
+            <input type="text" name="captcha"><br><br>
             <input type="submit" value="Dang ky"><br><br>
         </form>
+        <h4>${notice}</h4>
     </body>
 
     <script>
         function refreshCaptcha() {
-            fetch('http://localhost:8000/DemoProject/captchaServlet', {
+            fetch('/SWP/captchaServlet', {
                 method: 'POST'
             })
                     .then(Response => Response.blob())
