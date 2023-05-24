@@ -50,4 +50,19 @@ public class AccountDAO {
         return false;
         
     }
+
+    public void updateNewPass(String acc, String newPass) {
+        try {
+            String strSelect = "UPDATE accounts\n"
+                    + "SET Password=? \n"
+                    + "WHERE Username=? ;";
+            Connection cnn = (new DBContext()).connection;
+            PreparedStatement pstm = cnn.prepareStatement(strSelect);
+            pstm.setString(1, newPass);
+            pstm.setString(2, acc);
+            pstm.execute();
+        } catch (Exception e) {
+            System.out.println("listAll: " + e.getMessage());
+        }
+    }
 }
