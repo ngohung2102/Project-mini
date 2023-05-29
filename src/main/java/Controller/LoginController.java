@@ -5,8 +5,8 @@
 package Controller;
 
 import DAO.AccountDAO;
-import DAO.capchaDAO;
 import Model.Account;
+import Model.Hashing;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,9 +15,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
-//import nl.captcha.Captcha;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,34 +34,53 @@ public class LoginController extends HttpServlet {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //check what button is clicked
         if (request.getParameter("login") != null) {
+            //get user input form jsp
             String acc = request.getParameter("account");
             String pass = request.getParameter("pass");
-            
             String captchaInput = request.getParameter("captcha");
+            //get captcha from servlet
             HttpSession sess = request.getSession();
             String captcha = (String) sess.getAttribute("captcha");
-            
-            AccountDAO a = new AccountDAO();
-            boolean checkAccount = a.checkAccount(acc, pass);
-            
-            if (captcha.equals(captchaInput) && checkAccount) {
-                PrintWriter out = response.getWriter();
-                out.print("Succus");
+            boolean checkCaptcha=false;
+            if(captcha.equals(captchaInput)){
+                checkCaptcha=true;
             }
+            //decryted password and check account exsit
+            AccountDAO a = new AccountDAO();
+            Hashing hashing = new Hashing();
+            Account account = a.findAccount(acc);
+            boolean checkAccount = false;
             
+            if (account != null) {
+                String encrytedPass = account.getPassword();
+                String decrytedPass = "";
+                try {
+                    decrytedPass = hashing.decrypt(encrytedPass);
+                } catch (Exception ex) {
+                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //check input pass equals decryted pass
+                if (decrytedPass.equals(pass)) {
+                    checkAccount = true;
+                }
+            }
+
+            if (checkCaptcha && checkAccount) {
+                PrintWriter out = response.getWriter();
+                out.print("Succes");
+                
+            } else {
+                request.setAttribute("err", "Wrong account or password");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
+
         }
 
         if (request.getParameter("signUp") != null) {

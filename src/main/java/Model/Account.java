@@ -16,4 +16,5 @@ public class Account {
     private String userName,password,email;
     private double money;
     private int roleId;
+    private boolean status;
 }

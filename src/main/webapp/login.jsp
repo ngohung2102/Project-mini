@@ -18,17 +18,18 @@
     <center>
         <h3>Login Form</h3>
         <form action="login" method="post">
-            Account: <input type="text" name="account"><br><br>
-            Password: <input type="text" name="pass"><br><br>
-            <input type="submit" value="Login" name="login"><br><br>
-            <input type="submit" value="Sign Up" name="signUp"> 
-            <input type="submit" value="Foget password" name="rePass"><br><br>
+            Account: <input type="text" name="account" ><br><br>
+            Password: <input type="text" name="pass" ><br><br>
+            <input type="submit" value="Login" name="login" ><br><br>
+            <input type="submit" value="Sign Up" name="signUp" > 
+            <input type="submit" value="Foget password" name="rePass" ><br><br>
             
             <button type="button" onclick="refreshCaptcha()">recap</button>
             <img id="captchaImg" src="captchaServlet" alt="captch"/>
-            <input type="text" name="captcha"><br><br>
+            <input type="text" name="captcha" ><br><br>
         </form>
         <h4>${err}</h4>
+        <h4>${newPass}</h4>
     </center>
     
     <script>

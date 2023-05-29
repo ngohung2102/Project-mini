@@ -13,11 +13,11 @@
     </head>
     <body>
         <form action="rePass" method="post">
-            Account: <input type="text" name="account"><br><br>
+            Account: <input type="text" name="account" required><br><br>
             <button type="button" onclick="refreshCaptcha()">recap</button>
             <img id="captchaImg" src="captchaServlet" alt="captch"/>
-            <input type="text" name="capcha"><br><br>
-            <input type="submit" value="Yeu cau cap lai mat khau">
+            <input type="text" name="captcha" required><br>
+            <input type="submit" value="Send OTP">
         </form>
         <script>
             function refreshCaptcha() {

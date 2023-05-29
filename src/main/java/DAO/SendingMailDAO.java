@@ -21,17 +21,19 @@ import java.util.Properties;
  */
 public class SendingMailDAO {
 
-    public boolean SendingMail(HttpServletResponse response, HttpServletRequest request, String reciveEmail) {
+    public boolean SendingMail(HttpServletResponse response,
+            HttpServletRequest request, String reciveEmail,String title,String content) {
         String host = "smtp.gmail.com";
         String port = "465";
-        String username = "quangcdhe163932@fpt.edu.vn";
-        String password = "quang01683269606";
+        String username = "caoquang139@gmail.com";
+        String password = "ocwalevuuupyejar";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", port); // for TLS
         props.put("mail.smtp.starttls.enable", "true"); // for TLS
+        props.put("mail.smtp.ssl.enable", "true"); // for TLS
 
 //        props.put("mail.smtp.auth", "true");
 //        props.put("mail.smtp.port", port);
@@ -47,11 +49,11 @@ public class SendingMailDAO {
 
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("quangcdhe163932@fpt.edu.vn"));
+            message.setFrom(new InternetAddress(username));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(reciveEmail));
 
-            message.setSubject("Test Email 1");
-            message.setText("This is a test email.quang dpe trai");
+            message.setSubject(title);
+            message.setText(content);
 
             Transport.send(message);
             System.out.println("Email sent successfully!");

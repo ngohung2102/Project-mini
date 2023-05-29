@@ -6,6 +6,7 @@ package Controller;
 
 import DAO.AccountDAO;
 import DAO.SendingMailDAO;
+import DAO.capchaDAO;
 import Model.Account;
 import Model.Hashing;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**
@@ -51,58 +52,66 @@ public class RegisterController extends HttpServlet {
         String pass = request.getParameter("pass");
         String reciveEmail = request.getParameter("email");
         String capchaInput = request.getParameter("captcha");
-        
+
         //hashing password
         Hashing hashing = new Hashing();
-        String encryptPass="";
+        String encryptPass = "";
         try {
             encryptPass = hashing.encrypt(pass);
         } catch (Exception ex) {
             Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        HttpSession sess = request.getSession();
         //check valid acc
         AccountDAO a = new AccountDAO();
         List<Account> listA = a.listAll();
         boolean checkValid = false;
         for (Account a1 : listA) {
             if (a1.getUserName().equals(account)) {
+                sess.setAttribute("username", a1.getUserName());
                 checkValid = true;
             }
         }
-        
+        //add data
+        AccountDAO c = new AccountDAO();
+        c.addAll(account, encryptPass, reciveEmail, 1000000, 1, false);
+
         //sending mail
-//        SendingMailDAO sendMail = new SendingMailDAO();
-//        boolean checkMail = sendMail.SendingMail(response, request, reciveEmail);
-        boolean checkMail=true;
+        SendingMailDAO sendMail = new SendingMailDAO();
+        capchaDAO random = new capchaDAO();
+        //sending ma xac nhan to authen servlet
+        String maXacNhan=random.getCapcha();
+        
+        sess.setAttribute("maXacNhan", maXacNhan);
+        //set content and title mail
+        String title ="authentication";
+        String content = "anh tung dep trai gui ma cho em " + maXacNhan;
+        boolean checkMail = sendMail.SendingMail(response, request, reciveEmail,
+                title, content);
         
         //lay captcha tu session
-        HttpSession sess = request.getSession();
-        String capchaAnswer = (String)sess.getAttribute("captcha");
+        String capchaAnswer = (String) sess.getAttribute("captcha");
         //check valid captcha
         boolean checkCaptcha = capchaAnswer.equals(capchaInput);
-        
+
         //thong bao sau khi ko thoa man dk
         String notice = "";
         if (checkMail && checkCaptcha && !checkValid) {
             request.getRequestDispatcher("authentication.jsp").forward(request, response);
-        }else{
-            if(!checkMail) notice += "mail failed ";
-            if(!checkCaptcha) notice += "captcha failed ";
-            if(checkValid) notice += "account exsit ";
+        } else {
+            if (!checkMail) {
+                notice += "mail failed ";
+            }
+            if (!checkCaptcha) {
+                notice += "captcha failed ";
+            }
+            if (checkValid) {
+                notice += "account exsit ";
+            }
         }
         request.setAttribute("notice", encryptPass);
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
+
