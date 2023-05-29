@@ -1,5 +1,10 @@
 Controller\RegisterController.class
 Controller\AuthenticationServlet.class
+<<<<<<< HEAD
+=======
+DAO\SendingMailDAO$1.class
+DAO\AccountDAO.class
+>>>>>>> 1ce4781f794dea18d72853b63c04416343a8cf20
 Controller\rePassController.class
 DAO\SendingMailDAO.class
 Model\Account.class
