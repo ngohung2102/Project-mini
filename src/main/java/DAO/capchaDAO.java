@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
  */
-package DAO;
+package dao;
 
 import java.util.Random;
 
@@ -10,7 +10,7 @@ import java.util.Random;
  *
  * @author PC
  */
-public class capchaDAO {
+public class CapchaDAO {
 
     public String getCapcha() {
         Random rand = new Random();

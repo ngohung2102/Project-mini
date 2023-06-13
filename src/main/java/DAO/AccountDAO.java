@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DAO;
+package dao;
 
-import Model.Account;
+import model.Account;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -19,25 +20,28 @@ public class AccountDAO {
 
     public List<Account> listAll() {
         List<Account> list = new ArrayList<>();
-
         try {
-            String strSelect = "select * from accounts";
+
+            String strSelect = "select * from account";
             Connection cnn = (new DBContext()).connection;
             PreparedStatement pstm = cnn.prepareStatement(strSelect);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 list.add(new Account(rs.getString(1), rs.getString(2),
-                        rs.getString(3), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                        rs.getString(3), rs.getString(4), rs.getString(5),
+                        rs.getInt(6), rs.getDouble(7), rs.getDate(8),
+                        rs.getDate(9), rs.getBoolean(10)));
             }
         } catch (Exception e) {
             System.out.println("listAll: " + e.getMessage());
         }
+
         return list;
     }
 
     public boolean checkAccount(String account, String password) {
         try {
-            String strSelect = "select * from accounts where Username=? and Password=? ";
+            String strSelect = "select * from accounts where Account=? and Password=? ";
             Connection cnn = (new DBContext()).connection;
             PreparedStatement pstm = cnn.prepareStatement(strSelect);
             pstm.setString(1, account);
@@ -56,7 +60,7 @@ public class AccountDAO {
         try {
             String strSelect = "UPDATE accounts\n"
                     + "SET Password=? \n"
-                    + "WHERE Username=? ;";
+                    + "WHERE Account=? ;";
             Connection cnn = (new DBContext()).connection;
             PreparedStatement pstm = cnn.prepareStatement(strSelect);
             pstm.setString(1, password);
@@ -91,30 +95,11 @@ public class AccountDAO {
 //        }
     }
 
-    public void addAll(String account, String pass, String reciveEmail, double money, int roleID, boolean status) {
-        try {
-            String strSelect = "insert into accounts (Username,Password,email,Money,RoleID,status) \n"
-                    + "value(?,?,?,?,?,?);";
-            Connection cnn = (new DBContext()).connection;
-            PreparedStatement pstm = cnn.prepareStatement(strSelect);
-            pstm.setString(1, account);
-            pstm.setString(2, pass);
-            pstm.setString(3, reciveEmail);
-            pstm.setDouble(4, money);
-            pstm.setInt(5, roleID);
-            pstm.setBoolean(6, status);
-            pstm.execute();
-
-        } catch (Exception e) {
-            System.out.println("addAll: " + e.getMessage());
-        }
-    }
-
     public void updateStatusAccount(String username) {
         try {
-            String strSelect = "UPDATE accounts\n"
-                    + "SET status = 1\n"
-                    + "WHERE username=?;";
+            String strSelect = "UPDATE account\n"
+                    + "SET isActive = 1\n"
+                    + "WHERE account=?;";
             Connection cnn = (new DBContext()).connection;
             PreparedStatement pstm = cnn.prepareStatement(strSelect);
             pstm.setString(1, username);
@@ -122,6 +107,32 @@ public class AccountDAO {
 
         } catch (Exception e) {
             System.out.println("updateStatusAccount: " + e.getMessage());
+        }
+    }
+
+    public void addAccount(Account acc) {
+        try {
+            String strSelect = "insert into account (Account , Password,email,"
+                    + "phoneNumber,name,roleId,money,createdAt,isActive)\n"
+                    + "value(?,?,?,?,?,?,?,?,?)";
+            Connection cnn = (new DBContext()).connection;
+            PreparedStatement pstm = cnn.prepareStatement(strSelect);
+            pstm.setString(1, acc.getUserName());
+            pstm.setString(2, acc.getPassword());
+            pstm.setString(3, acc.getEmail());
+            pstm.setString(4, acc.getPhone());
+            pstm.setString(5, acc.getName());
+            pstm.setInt(6, acc.getRoleId());
+            pstm.setDouble(7, acc.getMoney());
+
+            long milliseconds = acc.getCreatedAt().getTime();
+            java.sql.Date createdAt = new java.sql.Date(milliseconds);
+            pstm.setDate(8, createdAt);
+            pstm.setBoolean(9, acc.isActive());
+            pstm.execute();
+
+        } catch (Exception e) {
+            System.out.println("addAccount: " + e.getMessage());
         }
     }
 }

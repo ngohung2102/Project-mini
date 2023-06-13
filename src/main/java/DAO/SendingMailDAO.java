@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DAO;
+package dao;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -13,16 +13,24 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.Properties;
 
 /**
  *
  * @author caoqu
  */
-public class SendingMailDAO {
+@lombok.AllArgsConstructor
+@lombok.NoArgsConstructor
+public class SendingMailDAO extends Thread {
 
-    public boolean SendingMail(HttpServletResponse response,
-            HttpServletRequest request, String reciveEmail,String title,String content) {
+    private HttpServletResponse response;
+    private HttpServletRequest request;
+    private String reciveEmail;
+    private String title;
+    private String content;
+
+    public void run() {
         String host = "smtp.gmail.com";
         String port = "465";
         String username = "caoquang139@gmail.com";
@@ -56,8 +64,8 @@ public class SendingMailDAO {
             message.setText(content);
 
             Transport.send(message);
+            
             System.out.println("Email sent successfully!");
-            return true;
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
