@@ -28,7 +28,7 @@ public class ChangePassController extends HttpServlet {
         HttpSession sess = req.getSession();
         String otp = (String) sess.getAttribute("otp");
         if (inputOtp.equals(otp)) {
-            req.getRequestDispatcher("changePassword.jsp").forward(req, resp);
+            req.getRequestDispatcher("login/changePassword.jsp").forward(req, resp);
         } else {
             req.setAttribute("err", "sai OTP");
             req.getRequestDispatcher("login/OTP.jsp").forward(req, resp);

@@ -24,4 +24,14 @@ public class Card {
     private int transactionId;
     private int productId;
     private Date createdAt;
+
+    public Card(String seri, String code, double price, Date expirationDate, Date createdAt) {
+        this.seri = seri;
+        this.code = code;
+        this.price = price;
+        this.expirationDate = expirationDate;
+        this.createdAt = createdAt;
+    }
+
+    
 }

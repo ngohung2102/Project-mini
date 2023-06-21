@@ -23,6 +23,13 @@
             }
             /* Thiết lập font chữ và background cho body */
             body {
+                 background:url(images/background.jpg) no-repeat;
+                background-attachment:fixed;
+                background-position:center;
+                background-size:cover;
+                -webkit-background-size:cover;
+                -moz-background-size:cover;
+                -o-background-size:cover;
                 font-family: Arial, sans-serif;
                 background-color: #f2f2f2;
             }
@@ -36,7 +43,7 @@
 
             /* Thiết lập độ rộng của form */
             form {
-                max-width: 300px;
+                max-width: 500px;
                 margin: 50px auto;
                 background-color: #fff;
                 border-radius: 5px;
@@ -73,6 +80,7 @@
                 padding: 10px;
                 margin-bottom: 20px;
                 cursor: pointer;
+                
             }
             button[type=button]:hover {
                 background-color: #005A7D;
@@ -91,6 +99,7 @@
             .recap{
                 margin-top: 5px;
                 padding-top: 10px;
+                margin-right: 30px;
             }
             #captchaImg{
                 padding-bottom: 15px;

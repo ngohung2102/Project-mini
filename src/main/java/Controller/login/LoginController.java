@@ -5,6 +5,7 @@
 package controller.login;
 
 import dao.AccountDAO;
+import dao.ListBuyOfShopDAO;
 import model.Account;
 import model.Hashing;
 import java.io.IOException;
@@ -14,8 +15,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Product;
 
 /**
  *
@@ -36,7 +39,6 @@ public class LoginController extends HttpServlet {
         }
         HttpSession sess = request.getSession();
         sess.removeAttribute("account");
-        sess.removeAttribute("password");
         request.getRequestDispatcher("login/login.jsp").forward(request, response);
 
     }
@@ -67,14 +69,19 @@ public class LoginController extends HttpServlet {
             }
             //check if login is valid
             boolean checkAccount = isValidLogin(account, pass);
-
             if (isAcitive && checkAccount && checkCaptcha) {
                 HttpSession session = request.getSession();
-                session.setAttribute("account", acc);
-                session.setAttribute("password", pass);
-//                request.getRequestDispatcher("output.jsp").forward(request, response);
+                session.setAttribute("account", account);
+                //sending list product to home
+                ListBuyOfShopDAO lb = new ListBuyOfShopDAO();
+                List<Product> suppliers = lb.getAllSupplier();
+                request.setAttribute("suppliers", suppliers);
+                List<Product> products = lb.getAllProduct();
+                request.setAttribute("products", products);
+                //move to home page
                 if (account.getRoleId() == 1) {
-                    request.getRequestDispatcher("home.jsp").forward(request, response);
+                    request.setAttribute("check", 1);
+                    request.getRequestDispatcher("dashboard.jsp").forward(request, response);
                 } else if (account.getRoleId() == 2) {
                     request.getRequestDispatcher("home.jsp").forward(request, response);
                 }

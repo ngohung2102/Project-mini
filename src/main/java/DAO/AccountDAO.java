@@ -6,10 +6,10 @@ package dao;
 
 import model.Account;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,9 +56,26 @@ public class AccountDAO {
         return false;
     }
 
+    public void updateProfile(String username, String name, String phoneNumber) {
+        try {
+            String strSelect = "UPDATE account "
+                    + "SET Name = ?, PhoneNumber=? "
+                    + "WHERE account=?;";
+            Connection cnn = (new DBContext()).connection;
+            PreparedStatement pstm = cnn.prepareStatement(strSelect);
+            pstm.setString(1, name);
+            pstm.setString(2, phoneNumber);
+            pstm.setString(3, username);
+            pstm.execute();
+
+        } catch (Exception e) {
+            System.out.println("updateProfile: " + e.getMessage());
+        }
+    }
+
     public void updateNewPass(String acc, String password) {
         try {
-            String strSelect = "UPDATE accounts\n"
+            String strSelect = "UPDATE account\n"
                     + "SET Password=? \n"
                     + "WHERE Account=? ;";
             Connection cnn = (new DBContext()).connection;
@@ -125,14 +142,30 @@ public class AccountDAO {
             pstm.setInt(6, acc.getRoleId());
             pstm.setDouble(7, acc.getMoney());
 
-            long milliseconds = acc.getCreatedAt().getTime();
-            java.sql.Date createdAt = new java.sql.Date(milliseconds);
+            Date d = new Date();
+            java.sql.Date createdAt = new java.sql.Date(d.getTime());
             pstm.setDate(8, createdAt);
             pstm.setBoolean(9, acc.isActive());
             pstm.execute();
 
         } catch (Exception e) {
             System.out.println("addAccount: " + e.getMessage());
+        }
+    }
+
+    public void updateMoney(String userName, double total, double money) {
+        try {
+            String strSelect = "UPDATE account\n"
+                    + "SET money = ?\n"
+                    + "WHERE account=?;";
+            Connection cnn = (new DBContext()).connection;
+            PreparedStatement pstm = cnn.prepareStatement(strSelect);
+            pstm.setDouble(1, money - total);
+            pstm.setString(2, userName);
+            pstm.execute();
+
+        } catch (Exception e) {
+            System.out.println("updateMoney: " + e.getMessage());
         }
     }
 }

@@ -24,13 +24,104 @@
         <!-- /css -->
         <style>
 
+            body {
+                background:url(images/background.jpg) no-repeat;
+                background-attachment:fixed;
+                background-position:center;
+                background-size:cover;
+                -webkit-background-size:cover;
+                -moz-background-size:cover;
+                -o-background-size:cover;
+                font-family: 'Raleway', sans-serif;
+                font-weight:300;
+            }
+            .form{
+                margin-top: 100px;
+            }
+             body {
+                background-image: url(images/background.jpg);
+                background-size: cover;
+            }
+            .captcha-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                max-width: 400px;
+            }
+            .captcha-image {
+                display: flex;
+                align-items: center;
+                font-size: 24px;
+                font-weight: bold;
+                letter-spacing: 10px;
+                /*text-transform: uppercase;*/
+                background-color: #f7f7f7;
+                padding: 10px;
+                margin :auto;
+            }
+
+            .captcha-char {
+                display: inline-block;
+                position: relative;
+                margin-right: 10px;
+                transform: skew(-20deg);
+                animation: jitter 0.2s infinite alternate;
+                color: #444;
+                background-color: #fff;
+                padding: 5px 10px;
+                border-radius: 5px;
+                box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+                -webkit-user-select: none; /* Safari */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* IE10+/Edge */
+                user-select: none;
+            }
+            #captchaImg{
+                margin-bottom: 10px;
+            }
+
+            .captcha-char:before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background-color: ${sessionScope.rgb};
+                transform: translateY(-50%);
+            }
+            .recap_container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+
+            .recap {
+                margin-top: 0;
+            }
+
+            button[type="button"] {
+                background-color: blue;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px;
+                margin-bottom: 5px;
+                cursor: pointer;
+            }
+            button[type=button]:hover {
+                background-color: #005A7D;
+                transform: scale(1.05);
+            }
+            /* Thiết lập màu chữ của placeholder là trắng */
 
 
         </style>
     </head>
     <body>
 
-        <form action="register" method="post">
+        <form class="form" action="register" method="post">
             <div class="form-control w3layouts"> 
                 <input type="text" id="firstname" name="account" placeholder="Account" title="Please enter your First Name" required="" autocomplete="off">
             </div>
@@ -40,10 +131,11 @@
             <div class="form-control w3layouts">	
                 <input type="email" id="email" name="email" placeholder="mail@example.com" title="Please enter a valid email" required="" autocomplete="off">
             </div>
-            <div class="captcha-container">
-                <button class="recap" type="button" onclick="refreshCaptcha()">recap</button>
-                <img id="captchaImg" src="CaptchaServlet" alt="captch"/>
-            </div>
+             <div class="recap_container">
+                    <img id="captchaImg" src="CaptchaServlet" alt="captch"/>
+                    <button class="recap" type="button" onclick="refreshCaptcha()">RECAP</button>
+
+             </div>
             <input type="text" name="captcha"><br><br>		
 
             <input type="submit" class="register" value="Register">

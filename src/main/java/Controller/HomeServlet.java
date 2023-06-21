@@ -5,21 +5,19 @@
 
 package controller;
 
+import dao.ListBuyOfShopDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import model.Product;
-
 /**
  *
  * @author asus
  */
+@WebServlet("/home")
 public class HomeServlet extends HttpServlet {
    
     /** 
@@ -57,43 +55,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-     
-//        CategoryDAO d = new CategoryDAO();
-//        List<Category> list = d.getAll();
-//        try {
-//            ProductDAO cdb = new ProductDAO();
-//            List<Product> c = cdb.getAll();
-//            List<Product> pro = new ArrayList<Product>();
-//            int i=1;
-//            for (Product product1 : c) {
-//                if (product1.getRate() >= 4) {
-//                    pro.add(product1);
-//                    i++;
-//                }
-//                if (i>8){
-//                    break;
-//                }
-//            }
-//            request.setAttribute("list", pro);
-//            
-//            List<Product> pro2 = new ArrayList<Product>();
-//            i=c.size();
-//            for (Product product1 : c) {
-//                if (product1.getId() > i-8) {
-//                    pro2.add(product1);
-//                }
-//                if (pro2.size()==8){
-//                    break;
-//                }
-//            }
-//            request.setAttribute("list2", pro2);
-//        } catch (NumberFormatException e) {
-//            System.out.println(e);
-//        }
-        
-//        HttpSession session = request.getSession();
-//        session.setAttribute("data", list);
-        
+        request.setAttribute("suppliers", (new ListBuyOfShopDAO()).getAllSupplier());
         request.getRequestDispatcher("home.jsp").forward(request, response);
     } 
 

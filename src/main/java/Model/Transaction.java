@@ -16,6 +16,7 @@ import jxl.write.DateTime;
 @lombok.Setter
 @lombok.NoArgsConstructor
 public class Transaction {
+
     private int id;
     private double buyPrice;
     private int buyAmount;
@@ -24,4 +25,22 @@ public class Transaction {
     private String accountId;
     private String description;
     private int productId;
+
+    public Transaction(int id, double buyPrice, int buyAmount, Date createdAt, String description) {
+        this.id = id;
+        this.buyPrice = buyPrice;
+        this.buyAmount = buyAmount;
+        this.createdAt = createdAt;
+        this.description = description;
+    }
+
+    public Transaction(int id, double buyPrice, int buyAmount, Date createdAt, String description, String accountId) {
+        this.id = id;
+        this.buyPrice = buyPrice;
+        this.buyAmount = buyAmount;
+        this.createdAt = createdAt;
+        this.description = description;
+        this.accountId = accountId;
+    }
+
 }

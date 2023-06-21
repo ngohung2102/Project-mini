@@ -15,6 +15,7 @@ import java.util.Date;
 @lombok.Setter
 @lombok.NoArgsConstructor
 public class Product {
+
     private int id;
     private String name;
     private double sellPrice;
@@ -26,5 +27,26 @@ public class Product {
     private Date createdAt;
     private Date deleteAt;
     private boolean status;
-    private int accountId;
+    private String accountId;
+
+    public Product(String supplier, String image) {
+        this.supplier = supplier;
+        this.image = image;
+    }
+
+    public Product(String supplier, double menhGia, int quantity, int id, boolean status) {
+        this.supplier = supplier;
+        this.amount = quantity;
+        this.sellPrice = menhGia;
+        this.id = id;
+        this.status = status;
+    }
+
+    public Product(String supplier, double menhGia, int quantity, int id) {
+        this.supplier = supplier;
+        this.amount = quantity;
+        this.sellPrice = menhGia;
+        this.id = id;
+    }
+
 }

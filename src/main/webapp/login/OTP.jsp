@@ -19,15 +19,22 @@
 
             /* Thiết lập font chữ và background cho body */
             body {
+                background:url(images/background.jpg) no-repeat;
+                background-attachment:fixed;
+                background-position:center;
+                background-size:cover;
+                -webkit-background-size:cover;
+                -moz-background-size:cover;
+                -o-background-size:cover;
                 font-family: Arial, sans-serif;
-                background: #f2f2f2;
+                
             }
 
 
             .form-container {
                 text-align: center;
-                background-color: #f2f2f2;
                 padding: 20px;
+                margin-top: 200px;
             }
 
 

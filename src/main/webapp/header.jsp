@@ -144,7 +144,9 @@
                 <div class="col-lg-4">
                     <a href="home" class="text-decoration-none">
                         <span class="h1 text-uppercase text-primary bg-dark px-2">Sell</span>
-                        <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Card</span>
+                        <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Phone</span>
+                        <span class="h1 text-uppercase text-primary bg-dark px-2 ml-n1">Card</span>
+
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
@@ -153,15 +155,15 @@
                             <input type="text" class="form-control" name="searchhome" placeholder="Search for products">
                             <div class="input-group-append">
                                 <input type="submit" class="input-group-text bg-transparent text-primary" value="Search">
-                                    <!--<i class="fa fa-search"></i>-->
+                                <!--<i class="fa fa-search"></i>-->
                                 </input>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="col-lg-4 col-6 text-right">
-                    
-                    <h5 class="m-0">Hello World</h5>
+
+                    <img src="images/logo.png" class="m-0"></img>
                 </div>
             </div>
             <!--             Topbar End 
@@ -172,10 +174,6 @@
 
                     <div class="col-lg-9" style="width: 1000px;">
                         <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
-                            <!--                            <a href="" class="text-decoration-none d-block d-lg-none">
-                                                            <span class="h1 text-uppercase text-dark bg-light px-2">Multi</span>
-                                                            <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1">Shop</span>
-                                                        </a>-->
                             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
@@ -188,18 +186,18 @@
                                             <i class="fa fa-angle-down mt-1" style="float: right;"></i>
                                         </a>
                                         <div class="dropdown-menu bg-primary rounded-0 border-0 m-0" style="background-color: whitesmoke;">
-                                            <c:forEach items="${sessionScope.data}" var="c">
-                                                <c:set var="cid" value="${c.id}" />
-                                                <a href="products?cid=${c.id}" class="dropdown-item">${c.name}</a>
+                                            <c:forEach items="${sessionScope.supplier}" var="c">
+                                                <c:set var="cid" value="${c.supplier}" />
+                                                <a href="products?cid=${c.supplier}" class="dropdown-item">${c.name}</a>
                                             </c:forEach>
                                         </div>
                                     </div>
                                     <div class="col-lg-9">
                                         <a href="home" class="nav-item nav-link" style="float: left;">Home</a>
                                         <a href="shop" class="nav-item nav-link" style="float: left;">Shopping</a>
-                                        <a href="myshop" class="nav-item nav-link" style="float: left;">My Shop</a>
-                                        <a href="cart" class="nav-item nav-link" style="float: left;">Cart</a>
-                                        <a href="thanhtoan?pids=0" class="nav-item nav-link" style="float: left;">Checkout</a>
+<!--                                        <a href="myshop" class="nav-item nav-link" style="float: left;">My Shop</a>
+                                        <a href="cart" class="nav-item nav-link" style="float: left;">Cart</a>-->
+                                        <a href="home" class="nav-item nav-link" style="float: left;">nap tien</a>
                                         <a href="myhistorybill" class="nav-item nav-link" style="float: left;">History Buy</a>
                                     </div>
 
@@ -220,12 +218,12 @@
 
                     </div>
                     <%--<c:set var="in" value="${requestScope.infor}" />--%>
-                    <div style="width: 340px;float: right;">
+                    <div style="width: 300px;float: right;">
                         <div style="">
                             <a href="accountinfor" style="float: left;padding: 10px;"><img style="background-color: #ffffff;padding: 10px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNi42MjcgMC0xMiA1LjM3My0xMiAxMnM1LjM3MyAxMiAxMiAxMiAxMi01LjM3MyAxMi0xMi01LjM3My0xMi0xMi0xMnptNy43NTMgMTguMzA1Yy0uMjYxLS41ODYtLjc4OS0uOTkxLTEuODcxLTEuMjQxLTIuMjkzLS41MjktNC40MjgtLjk5My0zLjM5My0yLjk0NSAzLjE0NS01Ljk0Mi44MzMtOS4xMTktMi40ODktOS4xMTktMy4zODggMC01LjY0NCAzLjI5OS0yLjQ4OSA5LjExOSAxLjA2NiAxLjk2NC0xLjE0OCAyLjQyNy0zLjM5MyAyLjk0NS0xLjA4NC4yNS0xLjYwOC42NTgtMS44NjcgMS4yNDYtMS40MDUtMS43MjMtMi4yNTEtMy45MTktMi4yNTEtNi4zMSAwLTUuNTE0IDQuNDg2LTEwIDEwLTEwczEwIDQuNDg2IDEwIDEwYzAgMi4zODktLjg0NSA0LjU4My0yLjI0NyA2LjMwNXoiLz48L3N2Zz4="></a>
-                            <h4 style="display:inline; color: rgb(255, 255, 255); font-size: 18px;float: left;padding-top: 20px;">Welcome ${sessionScope.infor.firstname}</h4>
+                            <h4 style="display:inline; color: rgb(255, 255, 255); font-size: 18px;float: left;padding-top: 20px;">Welcome ${sessionScope.account.userName}</h4>
                         </div>
-                        <a href="logout" style="display: inline-block;float: right;padding: 10px;"><img style="background-color: #ffffff;padding: 10px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTYgOXYtNGw4IDctOCA3di00aC04di02aDh6bS0xNi03djIwaDE0di0yaC0xMnYtMTZoMTJ2LTJoLTE0eiIvPjwvc3ZnPg=="></a>
+                        <a href="login" style="display: inline-block;float: right;padding: 10px;"><img style="background-color: #ffffff;padding: 10px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTYgOXYtNGw4IDctOCA3di00aC04di02aDh6bS0xNi03djIwaDE0di0yaC0xMnYtMTZoMTJ2LTJoLTE0eiIvPjwvc3ZnPg=="></a>
 
                     </div>
 

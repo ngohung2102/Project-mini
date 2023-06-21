@@ -18,20 +18,38 @@
         <link href="css/profile.css" rel="stylesheet">
 
         <style type="text/css"></style>
+
+        <script>
+            function validateForm() {
+                var phonex = document.getElementById("phone").value;
+                var regex = /^[0-9]+$/;
+
+                if (!regex.test(phonex)) {
+                    alert("Dữ liệu không được chứa chữ");
+                    return false;
+                }
+                if (phonex.length !== 10) {
+                    alert("So dien thoai phai chua 10 chu so");
+                    return false;
+                }
+                return true;
+            }
+
+        </script>
     </head>
 
     <body>
         <div class="container-fluid">
             <div class="container rounded bg-white mt-5 mb-5">
-                <form action="accountinfor" method="post">
+                <form action="accountinfor" method="post" onsubmit="return validateForm()">
                     <div class="row">
                         <div class="col-md-3 border-right">
                             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                                <img class="rounded-circle mt-5" width="150px" src="${sessionScope.infor.image}">
-                                <div class="col-md-6"><label class="labels" style="text-align: center;">Url Image :</label><input type="text" class="form-control" name="imagex" placeholder="url image" value="${sessionScope.infor.image}">
+                                <img class="rounded-circle mt-5" width="150px" src="">
+                                <div class="col-md-6"><label class="labels" style="text-align: center;">Url Image :</label><input type="text" class="form-control" name="imagex" placeholder="url image" value="">
                                 </div>
-                                <span class="font-weight-bold">${sessionScope.infor.firstname} ${sessionScope.infor.lastname}</span>
-                                <span class="text-black-50">@${sessionScope.infor.username}</span><span> </span>
+                                <span class="font-weight-bold"></span>
+                                <span class="text-black-50"></span><span> </span>
 
                             </div>
 
@@ -44,35 +62,31 @@
                                     <h4 class="text-right">Profile Settings</h4>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-md-6"><label class="labels">First Name :</label><input type="text" class="form-control" name="firstnamex" placeholder="first name" value="${sessionScope.infor.firstname}">
+                                    <div class="col-md-6"><label class="labels">Account :</label><input type="text" class="form-control" name="acc" readonly value="${sessionScope.account.userName}">
                                     </div>
-                                    <div class="col-md-6"><label class="labels">Last Name :</label><input type="text" class="form-control" name="lastnamex" value="${sessionScope.infor.lastname}" placeholder="last name">
+                                    <div class="col-md-6"><label class="labels">Name :</label><input type="text" class="form-control" name="name" value="${sessionScope.account.name}">
                                     </div>
                                 </div>
                                 <div class="row mt-3">
-                                    <div class="col-md-12"><label class="labels">Age :</label><input type="text" class="form-control" name="agex" placeholder="age" value="${sessionScope.infor.age}" name="">
+                                    <!--                                    <div class="col-md-12"><label class="labels">Age :</label><input type="text" class="form-control" name="agex" placeholder="age" value="" name="">
+                                                                        </div>-->
+                                    <div class="col-md-12"><label class="labels">Phone Number :</label><input type="text" class="form-control" name="phonex" id="phone" placeholder="phone number" value="${sessionScope.account.phone}">
                                     </div>
-                                    <div class="col-md-12"><label class="labels">Phone Number :</label><input type="text" class="form-control" name="phonex" placeholder="phone number" value="${sessionScope.infor.phonenumber}">
-                                    </div>
-                                    <div class="col-md-12"><label class="labels">Address :</label><input type="text" class="form-control" name="addressx" placeholder="address" value="${sessionScope.infor.address}">
-                                    </div>
+                                    <!--                                    <div class="col-md-12"><label class="labels">Address :</label><input type="text" class="form-control" name="addressx" placeholder="address" value="">
+                                                                        </div>-->
 
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6"><label class="labels">Country : </label><input type="text" class="form-control" placeholder="country" value="Kinh">
-                                    </div>
-                                    <div class="col-md-6"><label class="labels">Region : </label><input type="text" class="form-control" value="Dan toc Kinh" placeholder="state">
-                                    </div>
-                                </div>
+
                                 <div>
                                     <div style="margin-top: 20px;">
                                         <h5 style="display: inline-block;">Surplus :</h5> 
-                                        <h5 style="color: #ee4d2d;display: inline-block;"><s:formatNumber value="${sessionScope.infor.surplus}" type="currency"/></h5>
+                                        <h5 style="color: #ee4d2d;display: inline-block;"><s:formatNumber value="${sessionScope.account.money}" type="currency"/></h5>
                                         <h5 style="margin-left: 5px;display: inline-block;">VND</h5>
                                     </div>
                                 </div>
                                 <div class="mt-5 text-center">
                                     <!--                                    <button class="btn btn-primary profile-button" type="button">-->
+                                    <h3 style="color: red;">${requestScope.err2}</h3>
                                     <input type="submit" value="Save Profile">
 
                                     <!--                                    </button>-->
@@ -80,34 +94,38 @@
                             </div>
 
                         </div>
-
-                        <div class="col-md-4">
-                            <form action="resetpass" method="post">
-                                <div class="p-3 py-5">
-                                    <div class="d-flex justify-content-between align-items-center experience">
-                                        <h5>Input Change Password :</h5>
-                                    </div><br>
-                                    <div class="col-md-12"><label class="labels">Password Old : </label><input type="text" class="form-control" placeholder="old pass" name="passold" value="">
-                                        <label class="labels">${requestScope.error1}</label>
-                                    </div> <br>
-                                    <div class="col-md-12"><label class="labels">New Password : </label><input type="text" class="form-control" placeholder="new pass" name="passnew" value="">
-                                    <label class="labels">${requestScope.error2}</label>
-                                    </div>
-                                    
-                                </div>
-                                    <label class="labels">${requestScope.succ}</label>
-                                <div class="col-md-7" style="float: right;">
-                                        <input type="submit" value="Change Password">
-                                    </div>
+                </form>
+                <div class="col-md-4">
+                    <form action="newPass?mode=1" method="post">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center experience">
+                                <h5>Input Change Password :</h5>
+                            </div><br>
+                            <div class="col-md-12"><label class="labels">Password Old : </label><input type="password" class="form-control" readonly name="passold" value="${sessionScope.account.password}">
                                 
-                            </form>
+                            </div> <br>
+                            <div class="col-md-12"><label class="labels">New Password : </label><input type="text" class="form-control" placeholder="New pass" name="pass">
+                                
+                            </div><br/>
+                            <div class="col-md-12"><label class="labels">Re-New Password : </label><input type="text" class="form-control" placeholder="Re-new pass" name="rePass">
+                                
+                            </div>
 
                         </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+                        <label class="labels">${requestScope.succ}</label>
+                        <div class="col-md-7" style="float: right;">
+                            <h4 style="color: red;">${requestScope.err1}</h4>
+                            <input type="submit" value="Change Password">
+                        </div>
 
-    </body>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
 
 </html>

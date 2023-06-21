@@ -1,5 +1,3 @@
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -30,6 +28,25 @@
 
         <!-- Template Stylesheet -->
         <link href="css/style1.css" rel="stylesheet">
+        <style>
+            .btn {
+                background-color: #4CAF50; /* Màu nền của nút */
+                border: none; /* Không có đường viền */
+                color: white; /* Màu chữ trên nút */
+                padding: 10px 20px; /* Kích thước của nút */
+                text-align: center; /* Căn giữa văn bản trong nút */
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px; /* Kích thước chữ trên nút */
+                margin: 4px 2px; /* Khoảng cách giữa các nút */
+                cursor: pointer; /* Hiển thị con trỏ tay khi di chuột vào nút */
+            }
+
+            .btn:hover {
+                background-color: #3e8e41; /* Màu nền của nút khi di chuột vào */
+            }
+
+        </style>
     </head>
 
     <body>
@@ -51,58 +68,61 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Shop Name</th>
-                                                <th scope="col">Product Name</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Quantity</th>
-                                                <th scope="col">Total</th>
+                                                <th scope="col">STT</th>
+                                                <th scope="col">Mệnh giá</th>
+                                                <th scope="col">Số lượng</th>
+                                                <th scope="col">Ngày mua</th>
+                                                <th scope="col">Nhà mạng</th>
+                                                <th scope="col">Description</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${requestScope.datamybill}" var="db">
+                                            <c:forEach items="${requestScope.list}" var="db">
                                                 <tr>
-                                                    <th scope="row">${db.id}</th>
-                                                    <td>${db.date}</td>
-                                                    <td>${db.product.username}</td>
-                                                    <td>${db.product.name}</td>
-                                                    <td>${db.status.name}</td>
-                                                    <td>${db.quantity}</td>
-                                                    <td>${db.bill}</td>
+                                                    <td>${db.id}</td>
+                                                    <td>${db.buyPrice}</td>
+                                                    <td>${db.buyAmount}</td>
+                                                    <td>${db.createdAt}</td>
+                                                    <td>${db.description}</td>
+                                                    <td><a class="btn btn-primary" href="detailHistory?id=${db.id}">Xem chi tiết</a></td>
+
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
                                     </table>
+                                    <c:forEach begin="${1}" end="${soTrang}" var="i">
+                                        <a class="${i==page?"active":""}" href="myhistorybill?page=${i}"> ${i} </a>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
-                <!-- Table End -->
-
-
             </div>
-            <!-- Content End -->
+            <!-- Table End -->
 
 
-            <!-- Back to Top -->
-            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
         </div>
-        <%@include file="footer.jsp" %>
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/chart/chart.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/waypoints/waypoints.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="lib/tempusdominus/js/moment.min.js"></script>
-        <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-        <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- Content End -->
 
-        <!-- Template Javascript -->
-        <script src="js/main.js"></script>
-    </body>
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+    <%@include file="footer.jsp" %>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/chart/chart.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
 </html>

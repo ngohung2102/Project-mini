@@ -4,20 +4,25 @@
  */
 package controller;
 
+import dao.TransactionDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
+import model.Account;
+import model.Transaction;
 
 /**
  *
  * @author asus
  */
+@WebServlet("/myhistorybill")
 public class HistoryBuyServlet extends HttpServlet {
 
     /**
@@ -58,20 +63,30 @@ public class HistoryBuyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        Admin iu = (Admin) session.getAttribute("account");
-//        if (iu != null) {
-//            HistoryDAO cdb = new HistoryDAO();
-//            List<HistoryBuy> c = cdb.getAllByUser(iu.getUser());
-////            Collections.sort(c);
-//            Collections.sort(c, Collections.reverseOrder());
-//            request.setAttribute("sizemybill", c.size());
-//
-//            request.setAttribute("datamybill", c);
-//        } else {
-//            request.setAttribute("error", "bugs");
-//        }
-//        request.getRequestDispatcher("historybuy.jsp").forward(request, response);
+        TransactionDAO td = new TransactionDAO();
+        HttpSession sess = request.getSession();
+        Account account = (Account) sess.getAttribute("account");
+        int size = td.getSizeByAccount(account.getUserName());
+        int soTrang = (size % 5 == 0) ? (size / 5) : (size / 5 + 1);
+        //10
+        //trang 3 end 11
+        // start and end
+        // vd so trang 1 thi start 0 -> 3
+        // vd so trang 2 thi start 4 -> 7
+        String xpage = request.getParameter("page");
+        int page;
+        if (xpage == null) {
+            page = 1;
+        } else {
+            page = Integer.parseInt(xpage);
+        }
+       int limit = 5; 
+       int offset = (page - 1) * limit;
+      
+        List<Transaction> list = td.getAllByAccount(account.getUserName(),limit ,offset );
+        request.setAttribute("list", list);
+        request.setAttribute("soTrang", soTrang);
+        request.getRequestDispatcher("historybuy.jsp").forward(request, response);
     }
 
     /**

@@ -4,21 +4,26 @@
  */
 package controller;
 
+import dao.AccountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Account;
+import model.Hashing;
 //import Model.Category;
-//import Model.InforUser;
 
 /**
  *
  * @author asus
  */
+@WebServlet("/accountinfor")
 public class AccountInforServlet extends HttpServlet {
 
     /**
@@ -59,7 +64,23 @@ public class AccountInforServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         
+        HttpSession sess = request.getSession();
+        Account account1 = (Account) sess.getAttribute("account");
+//        String newPass = request.getParameter("pass");
+//        String rePass = request.getParameter("rePass");
+//        AccountDAO acc = new AccountDAO();
+        Hashing has = new Hashing();
+        
+        String password = account1.getPassword();
+
+        try {
+            String decrypt = has.decrypt(password);
+            account1.setPassword(decrypt);
+        } catch (Exception ex) {
+            Logger.getLogger(AccountInforServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         request.getRequestDispatcher("account.jsp").forward(request, response);
     }
 
@@ -74,35 +95,22 @@ public class AccountInforServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        InforUserDAO cb = new InforUserDAO();
-//        HttpSession session = request.getSession();
-//        InforUser iu = (InforUser) session.getAttribute("infor");
-//        String s;
-//        int x;
-//        String age = request.getParameter("agex");
-//        int ageto;
-//        try {
-//            ageto = Integer.parseInt(age);
-//            if (iu == null) {
-//                response.sendRedirect("login");
-//            } else {
-//                s = iu.username;
-//                x = cb.getInforUserByUserName(s).getSurplus();
-//                InforUser u = new InforUser(s, request.getParameter("firstnamex"),
-//                        request.getParameter("lastnamex"),
-//                        request.getParameter("phonex"),
-//                        request.getParameter("addressx"),
-//                        request.getParameter("imagex"),
-//                        ageto,
-//                        x);
-//                cb.updateProfile(u);
-//                session.setAttribute("infor", u);
-//                request.getRequestDispatcher("account.jsp").forward(request, response);
-//            }
-//
-//        } catch (NumberFormatException e) {
-//            System.out.println(e);
-//        }
+
+        HttpSession sess = request.getSession();
+        String account = request.getParameter("acc");
+        String name = request.getParameter("name");
+        String phonex = request.getParameter("phonex");
+        AccountDAO acc = new AccountDAO();
+        Account account1 = (Account) sess.getAttribute("account");
+        account1.setName(name);
+        account1.setPhone(phonex);
+        // hashing ve mat khau thuong
+
+        // update database
+        acc.updateProfile(account, name, phonex);
+        request.setAttribute("err2", "update successfull");
+
+        request.getRequestDispatcher("account.jsp").forward(request, response);
 
     }
 

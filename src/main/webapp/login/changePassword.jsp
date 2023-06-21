@@ -18,6 +18,14 @@
 
             /* Thiết lập font chữ và background cho body */
             body {
+                background:url(images/background.jpg) no-repeat;
+                background-attachment:fixed;
+                background-position:center;
+                background-size:cover;
+                -webkit-background-size:cover;
+                -moz-background-size:cover;
+                -o-background-size:cover;
+
                 font-family: Arial, sans-serif;
                 background: #f2f2f2;
             }
@@ -25,8 +33,8 @@
 
             .form-container {
                 text-align: center;
-                background-color: #f2f2f2;
                 padding: 20px;
+                margin-top: 200px;
             }
 
 
@@ -67,36 +75,36 @@
     </head>
     <body>
         <div class="form-container">
-             <form action="newPass" method="Post">
+            <form action="newPass" method="Post">
                 Hello ${sessionScope.userName} <br/>
                 <label for="pass">Pass:</label>
                 <div class="input-container">
-                <input type="password" id="pass" name="pass">
-                <button type="button" class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa fa-eye"></i></button>
+                    <input type="password" id="pass" name="pass">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa fa-eye"></i></button>
                 </div>
                 <label for="rePass">Re-Pass:</label>
-                 <div class="input-container">
-                <input type="password" id="rePass" name="rePass">
-                <button type="button" class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa fa-eye"></i></button>
-                 </div>
+                <div class="input-container">
+                    <input type="password" id="rePass" name="rePass">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa fa-eye"></i></button>
+                </div>
                 <input type="submit" value="Submit">
             </form>
         </div>
     </body>
     <script>
         function togglePasswordVisibility() {
-    const passwords = document.querySelectorAll('input[type="password"]');
-    const buttons = document.querySelectorAll('.toggle-password');
-    for (let i = 0; i < passwords.length; i++) {
-        if (passwords[i].type === 'password') {
-            passwords[i].type = 'text';
-            buttons[i].innerHTML = '<i class="fa fa-eye-slash"></i>';
-        } else {
-            passwords[i].type = 'password';
-            buttons[i].innerHTML = '<i class="fa fa-eye"></i>';
+            const passwords = document.querySelectorAll('input[type="password"]');
+            const buttons = document.querySelectorAll('.toggle-password');
+            for (let i = 0; i < passwords.length; i++) {
+                if (passwords[i].type === 'password') {
+                    passwords[i].type = 'text';
+                    buttons[i].innerHTML = '<i class="fa fa-eye-slash"></i>';
+                } else {
+                    passwords[i].type = 'password';
+                    buttons[i].innerHTML = '<i class="fa fa-eye"></i>';
+                }
+            }
         }
-    }
-}
 
     </script>
 </html>

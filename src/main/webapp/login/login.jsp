@@ -14,6 +14,10 @@
         <title>Login Page</title>
         <link href="css/login.css" rel="stylesheet">
         <style>
+            body {
+                background-image: url(images/background.jpg);
+                background-size: cover;
+            }
             .captcha-container {
                 display: flex;
                 align-items: center;
@@ -48,6 +52,9 @@
                 -ms-user-select: none; /* IE10+/Edge */
                 user-select: none;
             }
+            #captchaImg{
+                margin-bottom: 10px;
+            }
 
             .captcha-char:before {
                 content: "";
@@ -59,6 +66,43 @@
                 background-color: ${sessionScope.rgb};
                 transform: translateY(-50%);
             }
+            .recap_container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+
+            .recap {
+                margin-top: 0;
+            }
+
+            button[type="button"] {
+                background-color: #008CBA;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px;
+                margin-bottom: 5px;
+                cursor: pointer;
+            }
+            button[type=button]:hover {
+                background-color: #005A7D;
+                transform: scale(1.05);
+            }
+            /* Thiết lập màu chữ của placeholder là trắng */
+            .form__input::placeholder {
+                color: #fff;
+            }
+            .text--center{
+                color: #fff;
+            }
+            .icon{
+                color:#fff;
+            }
+
+
+
 
             @keyframes jitter {
                 from {
@@ -68,7 +112,26 @@
                     transform: skew(-20deg) translateX(5px);
                 }
             }
+
         </style>
+        <script>
+            function refreshCaptcha() {
+                // Lấy đối tượng button theo class
+                var btn = document.querySelector(".recap");
+
+                // Thay đổi màu background của button
+                btn.style.backgroundColor = "#4CAF50";
+
+                // Tạo timeout để button trở lại màu ban đầu sau một khoảng thời gian
+                setTimeout(function () {
+                    btn.style.backgroundColor = "";
+                }, 300);
+
+                // Gọi đến server để lấy captcha mới
+                // ...
+            }
+
+        </script>
     </head>
 
     <body class="align">
@@ -90,13 +153,16 @@
                     <input id="login__password" type="password" name="pass" class="form__input" placeholder="Password" required>
                 </div>
 
-                <div class="captcha-image" >
-                    <button class="recap" type="button" onclick="refreshCaptcha()">recap</button>
+                <div class="recap_container">
                     <img id="captchaImg" src="CaptchaServlet" alt="captch"/>
+                    <button class="recap" type="button" onclick="refreshCaptcha()">RECAP</button>
+
                 </div>
+
+
                 <div class="form__field">
                     <label for="captcha"><svg class="icon">
-                        <!--<use xlink:href="#icon-lock"></use>-->
+                        <use xlink:href="#icon-lock"></use>
                         </svg><span class="hidden">Captcha</span></label>
                     <input id="login__username" type="text" name="captcha" class="form__input" placeholder="Captcha" required>
                 </div>
@@ -110,8 +176,8 @@
 
             </form>
 
-            <p class="text--center">Not a member? <a href="login?signUp=1">Sign up now</a> <svg class="icon">
-                <use xlink:href="#icon-arrow-right"></use>
+            <p class="text--center">Not a member ? <a href="login?signUp=1"> Sign up now</a> <svg class="icon">
+                <use class="right" xlink:href="#icon-arrow-right"></use>
                 </svg></p>
 
         </div>
