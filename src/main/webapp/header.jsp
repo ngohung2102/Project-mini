@@ -183,21 +183,16 @@
                                         <a href="" class="nav-link dropdown-toggle dropdown-menu-config" data-toggle="dropdown" style="background-color: #d88484;color: #3D464D;width: 200px;height: 64px;padding-top: 20px;">
                                             <i class="fa fa-bars mr-2"></i>
                                             <h6 style="display: inline-block">Categories </h6>
-                                            <i class="fa fa-angle-down mt-1" style="float: right;"></i>
+                                            
                                         </a>
-                                        <div class="dropdown-menu bg-primary rounded-0 border-0 m-0" style="background-color: whitesmoke;">
-                                            <c:forEach items="${sessionScope.supplier}" var="c">
-                                                <c:set var="cid" value="${c.supplier}" />
-                                                <a href="products?cid=${c.supplier}" class="dropdown-item">${c.name}</a>
-                                            </c:forEach>
-                                        </div>
+                                       
                                     </div>
                                     <div class="col-lg-9">
                                         <a href="home" class="nav-item nav-link" style="float: left;">Home</a>
                                         <a href="shop" class="nav-item nav-link" style="float: left;">Shopping</a>
 <!--                                        <a href="myshop" class="nav-item nav-link" style="float: left;">My Shop</a>
                                         <a href="cart" class="nav-item nav-link" style="float: left;">Cart</a>-->
-                                        <a href="home" class="nav-item nav-link" style="float: left;">nap tien</a>
+                                        <a href="home" class="nav-item nav-link" style="float: left;">Load Money</a>
                                         <a href="myhistorybill" class="nav-item nav-link" style="float: left;">History Buy</a>
                                     </div>
 
@@ -246,4 +241,4 @@
         <script src="js/main.js"></script>
     </body>
 
-</html>
+</html> 
