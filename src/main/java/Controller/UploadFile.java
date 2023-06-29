@@ -4,6 +4,7 @@
  */
 package controller;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.List;
 import dao.*;
@@ -52,20 +53,20 @@ public class UploadFile extends HttpServlet {
         String sellPrice_raw = request.getParameter("menhGia");
         double sellPrice = Double.parseDouble(sellPrice_raw);
 
-        //get productId
-        int productId=0;
-        
-        
         String appPath = request.getServletContext().getRealPath("");
         appPath = appPath.replace('\\', '/');
-        System.out.println(appPath);
         List<String> fileUrls = UploadHelper.upload(request);
         System.out.println(fileUrls.get(0));
-        CardDAO cd =new CardDAO();
-        cd.ImportExcel(appPath + fileUrls.get(0),
-                 sellPrice, supplier);
-        
-        //update so luong san pham
+        CardDAO cd = new CardDAO();
+        List<Card> listErr = cd.ImportExcel(appPath + fileUrls.get(0),
+                sellPrice, supplier);
+
+        if (listErr.size() == 0) {
+            request.setAttribute("err", "sucess");
+        } else {
+            request.setAttribute("listErr", listErr);
+
+        }
 
         //chuyen trang
         request.getRequestDispatcher("import.jsp").forward(request, response);

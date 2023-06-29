@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import model.Account;
 import model.Transaction;
-import static org.apache.poi.hssf.usermodel.HeaderFooter.page;
 
 /**
  *
@@ -68,7 +67,10 @@ public class HistoryBuyServlet extends HttpServlet {
         int limit = 3; // giá trị mặc định cho limit
         HttpSession sess = request.getSession();
         Account account = (Account) sess.getAttribute("account");
-
+        if(account==null){
+            request.getRequestDispatcher("login/login.jsp").forward(request, response);
+            return;
+        }
         if (slParam != null && !slParam.isEmpty()) {
             try {
                 limit = Integer.parseInt(slParam);
