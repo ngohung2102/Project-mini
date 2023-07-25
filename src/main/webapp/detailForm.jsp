@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>
         <%
             ListBuyOfShopDAO l = new ListBuyOfShopDAO();
-            List<Product> productList = l.getAllProduct();
+            List<Product> productList = l.getAllProductOrder();
         %>
 
         <script>
@@ -134,10 +134,10 @@
                     <input class="modal-input" type="text" id="soLuong" name="quantity" readonly><br>
 
                     <label class="modal-label" for="mieuTa">Miêu tả:</label>
-
-                    <input class="modal-input" type="text" id="mieuTa" value="" readonly><br>
+                    <input class="modal-input" type="text" id="mieuTa" value="" readonly><br><!--
                     <label class="modal-label" for="hetHan">Ngày hết hạn:</label> 
                     <input class="modal-input" type="text" id="hetHan" value="" readonly><br>
+                    -->
                     <input type="text" id="pId" name="id" hidden=""><br>
 
                     <input class="submit" type="submit" value="Buy">
@@ -181,11 +181,8 @@
 
                 var description1 = document.getElementById("mieuTa");
                 description1.value = description;
-                var hetHan = document.getElementById("hetHan");
-                hetHan.value = expirationDate;
                 var pid = document.getElementById("pId");
                 pid.value = id;
-
             }
             function validateForm() {
                 var selectedSupplier = document.getElementById('supplier').value;
@@ -210,41 +207,47 @@
                 var supplierInput = document.getElementById("supplier").value;
                 var denominationInput = document.getElementById("denomination").value;
                 var quantityInput = document.getElementById("quantity").value;
+                if (productList.length === 0) {
+                    alert("Chưa có sản phẩm nào trong kho");
+                    return false;
+                }
                 outerLoop:for (var i = 0; i < productList.length; i++) {
                     var obj = productList[i];
                     for (var key in obj) {
                         var sellPrice = obj["sellPrice"];
                         var supplier = obj["supplier"];
-                        var expirationDate = obj["expirationDate"];
                         var amount = obj["amount"];
                         var status = obj["status"];
-                        var pId = obj["id"];
-                        var check = false;
+                        var check1 = false;
                         if (sellPrice == denominationInput && supplier == supplierInput) {
+                            var pId = obj["id"];
+
                             if (quantityInput > amount) {
                                 if (amount == 0) {
-                                    alert("san pham het hang");
+                                    check2 = true;
+                                    return false;
                                 } else {
-                                    alert("so luong hang trong kho chi con " + amount +
-                                            "vui long nhap lai");
+                                    alert("Số lượng hàng trong khi chỉ còn " + amount +
+                                            " vui lòng nhập số lượng nhỏ hơn "+amount);
+                                    return false;
                                 }
-                                return false;
                             }
+
                             id = pId;
-                            check = true;
+                            check1 = true;
                             break outerLoop;
                         }
                     }
                 }
-                if (check == false) {
+                if (check1 == false) {
                     alert("san pham chua co trong kho");
                     return false;
                 }
                 return true;
             }
             function validateAndShowForm() {
-                var checkStat = checkStatus();
                 var isValid = validateForm();
+                var checkStat = checkStatus();
                 if (isValid && checkStat) {
                     showAnotherForm();
                 }

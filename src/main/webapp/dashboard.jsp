@@ -11,6 +11,7 @@
 <%@page import="com.google.gson.Gson"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 
@@ -114,10 +115,76 @@
             tr:nth-child(even) {
                 background-color: #f2f2f2;
             }
+            .form-container {
+                /*max-width: 300px;*/
+                margin: 0 auto;
+                border: 2px solid #ccc;
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 10px;
+            }
+
+            h5 {
+                margin-top: 10px;
+                margin-bottom: 5px
+            }
+
+            .custom-control {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .custom-checkbox input[type="checkbox"] {
+                margin-right: 5px;
+            }
+
+            .custom-checkbox label {
+                margin-left: 5px;
+            }
+
+            .custom-checkbox input[type="text"] {
+                width: 100%;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            input[type="submit"] {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #009688;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            input[typesubmit"]:hover {
+            background-color: #45a049;
+            }
         </style>
     </head>
 
     <body>
+        <%-- Check if the transfer was successful and display the success message --%>
+        <% boolean transferSuccess = Boolean.TRUE.equals(session.getAttribute("transferSuccess"));
+            boolean transferFail = Boolean.FALSE.equals(session.getAttribute("transferFail"));
+        %>
+        <% if (transferSuccess) { %>
+        <script type="text/javascript">
+                alert("Transfer money successfully!");
+        </script>
+        <%-- Clear the session attribute to prevent showing the message on subsequent requests --%>
+        <% session.removeAttribute("transferSuccess"); %>
+        <%}else if(transferFail){%>
+        <script type="text/javascript">
+                alert("Transfer money failed");
+        </script> 
+        <% session.removeAttribute("transferFail"); %>
+        <%}%>
         <div class="wrapper">
             <div class="sidebar" data-image="assets/img/sidebar-5.jpg">
                 <!--
@@ -128,40 +195,50 @@
                 <div class="sidebar-wrapper">
                     <div class="logo">
                         <a href="" class="simple-text">
-                            Admin sell card
+                            Quản trị thẻ
                         </a>
                     </div>
                     <ul class="nav">
                         <li class="nav-item ">
                             <a class="nav-link" href="dashboard.jsp">
                                 <i class="nc-icon nc-chart-pie-35"></i>
-                                <p>Dashboard</p>
+                                <p>Trang chủ</p>
                             </a>
                         </li>
                         <li>
                             <a class="nav-link" href="manageProduct">
                                 <i class="nc-icon nc-circle-09"></i>
-                                <p>Manage Product</p>
+                                <p>Quản lý sản phẩm</p>
                             </a>
                         </li>
                         <li>
                             <a class="nav-link" href="adminTransaction">
                                 <i class="nc-icon nc-notes"></i>
-                                <p>Transaction history</p>
+                                <p>Lịch sử mua hàng</p>
                             </a>
                         </li>
+
                         <li>
-                            <a class="nav-link" href="import.jsp">
+                            <a class="nav-link" href="AccountTransferServlet">
                                 <i class="nc-icon nc-bell-55"></i>
-                                <p>Import excel file</p>
+                                <p>Quản lý tài khoản</p>
                             </a>
                         </li>
-                        <li class="nav-item active active-pro">
-                            <a class="nav-link active" href="upgrade.jsp">
-                                <i class="nc-icon nc-alien-33"></i>
-                                <p>Upgrade to PRO</p>
+
+                        <li>
+                            <a class="nav-link" href="historyTranfer">
+                                <i class="nc-icon nc-bell-55"></i>
+                                <p>Lịch sử giao dịch</p>
                             </a>
                         </li>
+
+                        <li>
+                            <a class="nav-link" href="importServlet">
+                                <i class="nc-icon nc-bell-55"></i>
+                                <p>Thêm thẻ từ file excel</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -236,277 +313,485 @@
 
 
                 <div class="content">
-                    <c:if test="${check==2}">
-                        <table border="1">
-                            <th>STT</th>
-                            <th>Tên</th>
-                            <th>Mệnh giá</th>
-                            <th>Số lượng</th>
-                            <th>Nhà mạng</th>
-                            <th>Ngày hết hạn</th>
-                            <th>Mô tả</th>
-                            <th>Ngày bắt đầu bán</th>
-                                <c:forEach items="${products}" var="p">
+                    <c:if test="${check==4}">
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>${p.id}</td>
-                                    <td>${p.name}</td>
-                                    <td>${p.sellPrice}</td>
-                                    <td>${p.amount}</td>
-                                    <td>${p.supplier}</td>
-                                    <td>${p.expirationDate}</td>
-                                    <td>${p.description}</td>
-                                    <td>${p.createdAt}</td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </c:if>
-                    <c:if test="${check==3}">
-                        <table border="1">
-                            <th>id</th>
-                            <th>buyPrice</th>
-                            <th>buyAmount</th>
-                            <th>createdAt</th>
-                            <th>description</th>
-                            <th>accountId</th>
-                            <th>Details</th>
-                                <c:forEach items="${transactions}" var="p">
-                                <tr>
-                                    <td>${p.id}</td>
-                                    <td>${p.buyPrice}</td>
-                                    <td>${p.buyAmount}</td>
-                                    <td>${p.createdAt}</td>
-                                    <td>${p.description}</td>
-                                    <td>${p.accountId}</td>
-                                    <td><a class="btn btn-primary detail-link" data-id="${p.id}" href="#" onclick="showAnotherForm(event)">Xem chi tiết</a></td>
+                                    <th scope="col">Tên tài khoản</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Số điện thoại</th>
+                                    <th scope="col">Tiền</th>
+                                    <th scope="col">Ngày tạo</th>
+                                    <th scope="col">Trạng thái</th>
+                                    <th scope="col">Hành động</th>
+                                    <th scope="col">Cấm</th>
+                                    <th scope="col">Gỡ cấm</th>
 
                                 </tr>
-                            </c:forEach>           
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${list}" var="user">
+                                    <tr>
+                                        <td scope="row">${user.userName}</td>
+                                        <td>${user.email}</td>
+                                        <td>${user.phone}</td>
+                                        <td>${user.money}
+                                        <td>${user.createdAt}</td>
+                                        <td>${user.isActive()}</td>
+                                        <td>
+                                            <button class="btn btn-success"><a href="history_transfer.jsp?account=${user.userName}" >Cộng/trừ tiền</a></button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success"><a href="ban?account=${user.userName}&ban=0" >Cấm</a></button>
+                                        </td>
+                                        <td><button class="btn btn-success"><a href="ban?account=${user.userName}&ban=1" >Gỡ cấm</a></button></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
                         </table>
-                        <c:forEach begin="${1}" end="${soTrang}" var="i">
-                            <a class="${i==page?"active":""}" href="adminTransaction?page=${i}"> ${i} </a>
-                        </c:forEach>                
-                        <form method="GET" id="myForm" onchange="submitForm()" >
+                        <form method="GET" id="pageSizeForm" onchange="submitForm()">
                             <label for="page-size">Hiển thị:</label>
                             <select id="page-size" name="sl">
                                 <option value="3" ${limit == 3 ? 'selected' : ''}>3</option>
                                 <option value="5" ${limit == 5 ? 'selected' : ''}>5</option>
                                 <option value="10" ${limit == 10 ? 'selected' : ''}>10</option>
                             </select>
-                            <!--                                        <input type="submit" value="Áp dụng">-->
-                            <!--<button type="button" >Submit</button>-->
                         </form>
-                        <%@include file="historyDetailForm.jsp" %>
 
+
+                        <form method="GET" id="pageNumberForm" onchange="submitForm()">
+                            <label for="page-number">Trang:</label>
+                            <input type="text" id="page-number" name="page" value="${page}" oninput="handlePageNumber(event)">
+                            <span>/</span>
+                            <span>${soTrang}</span>
+                            <input type="hidden" name="sl" value="${limit}">
+
+                            <a class="${i == page ? 'active' : ''}" href="AccountTransferServlet?page=${i}">${i}</a>
+
+
+                        </form>
                     </c:if>
 
-                    <c:if test="${check==1}">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="card ">
-                                        <div class="card-header ">
-                                            <h4 class="card-title">Email Statistics</h4>
-                                            <p class="card-category">Last Campaign Performance</p>
-                                        </div>
-                                        <div class="card-body ">
-                                            <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-                                            <div class="legend">
-                                                <i class="fa fa-circle text-info"></i> Open
-                                                <i class="fa fa-circle text-danger"></i> Bounce
-                                                <i class="fa fa-circle text-warning"></i> Unsubscribe
-                                            </div>
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
-                                            </div>
-                                        </div>
-                                    </div>
+                    <c:if test="${check==5}">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Từ tài khoản</th>
+                                    <th scope="col">Tới tài khoản</th>
+                                    <th scope="col">Tiền</th>
+                                    <th scope="col">Ngày tạo</th>
+                                    <th scope="col">Loại giao dịch</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${list}" var="user">
+                                    <tr>
+                                        <td scope="row">${user.id}</td>
+                                        <td>${user.fromAccount}</td>
+                                        <td>${user.toAccount}</td>
+                                        <td>${user.amount}
+                                        <td>${user.createdAt}</td>
+                                        <c:if test="${user.transactionType==true}">
+                                            <td>+</td>
+                                        </c:if>
+                                        <c:if test="${user.transactionType==false}">
+                                            <td>-</td>
+                                        </c:if>
+
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                        <form method="GET" id="pageSizeForm" onchange="submitForm()">
+                            <label for="page-size">Hiển thị:</label>
+                            <select id="page-size" name="sl">
+                                <option value="3" ${limit == 3 ? 'selected' : ''}>3</option>
+                                <option value="5" ${limit == 5 ? 'selected' : ''}>5</option>
+                                <option value="10" ${limit == 10 ? 'selected' : ''}>10</option>
+                            </select>
+                        </form>
+
+
+
+                        <form method="GET" id="pageNumberForm" onchange="submitForm()">
+                            <label for="page-number">Trang:</label>
+                            <input type="text" id="page-number" name="page" value="${page}" oninput="handlePageNumber(event)">
+                            <span>/</span>
+                            <span>${soTrang}</span>
+                            <input type="hidden" name="sl" value="${limit}">
+
+                            <a class="${i == page ? 'active' : ''}" href="AccountTransferServlet?page=${i}">${i}</a>
+
+
+                        </form>
+                    </c:if>
+
+                    <c:if test="${check==2}">
+                        <div class="form-container">
+                            <form action="manageProduct" method="get">
+                                <h5>Lọc theo mệnh giá mua</h5>
+                                <hr  width="100%" align="center" />
+                                <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                    <input type="checkbox" value="Tất cả giá" checked>Tất cả giá
+                                    <c:forEach items="${prices}" var="p">
+                                        <input type="checkbox" id="${p}" name="${p}" value="${p}" 
+                                               <c:if test="${selectedPrices.contains(p)}">checked</c:if>
+                                                   >
+                                               <label for="${p}">${p}</label>
+                                    </c:forEach>
+
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="card ">
-                                        <div class="card-header ">
-                                            <h4 class="card-title">Users Behavior</h4>
-                                            <p class="card-category">24 Hours performance</p>
-                                        </div>
-                                        <div class="card-body ">
-                                            <div id="chartHours" class="ct-chart"></div>
-                                        </div>
-                                        <div class="card-footer ">
-                                            <div class="legend">
-                                                <i class="fa fa-circle text-info"></i> Open
-                                                <i class="fa fa-circle text-danger"></i> Click
-                                                <i class="fa fa-circle text-warning"></i> Click Second Time
-                                            </div>
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-history"></i> Updated 3 minutes ago
-                                            </div>
-                                        </div>
-                                    </div>
+                                <h5>Lọc theo nhà mạng</h5>
+                                <hr  width="100%" align="center" />
+                                <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                    <input type="checkbox" value="Tất cả giá" checked>Tất cả nhà mạng
+                                    <c:forEach items="${suppliers}" var="p">
+                                        <br>
+                                        <input type="checkbox" id="${p.supplier}" name="${p.supplier}" value="${p.supplier}" 
+                                               <c:if test="${selectedSuppliers.contains(p.supplier)}">checked</c:if>
+                                                   >
+                                               <label for="${p.supplier}">${p.supplier}</label>
+                                    </c:forEach>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card ">
-                                        <div class="card-header ">
-                                            <h4 class="card-title">2023 Sale Card</h4>
-                                            <p class="card-category">All products </p>
-                                        </div>
-                                        <div class="card-body ">
-                                            <div id="chartActivity" class="ct-chart"></div>
-                                        </div>
-                                        <div class="card-footer ">
-                                            <div class="legend">
-                                                <i class="fa fa-circle text-info"></i> Viettel
-                                                <i class="fa fa-circle text-danger"></i> Mobiphone
-                                            </div>
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-check"></i> Data information certified
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                <h5>Lọc theo tên sản phẩm</h5>
+                                <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                    <input type="text" name="pName" value="${name}">
+
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card  card-tasks">
-                                        <div class="card-header ">
-                                            <h4 class="card-title">Tasks</h4>
-                                            <p class="card-category">Backend development</p>
-                                        </div>
-                                        <div class="card-body ">
-                                            <div class="table-full-width">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="checkbox" value="">
-                                                                        <span class="form-check-sign"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                            <td>Sign contract for "What are conference organizers afraid of?"</td>
-                                                            <td class="td-actions text-right">
-                                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
-                                                                    <i class="fa fa-times"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="checkbox" value="" checked>
-                                                                        <span class="form-check-sign"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                            <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
-                                                            <td class="td-actions text-right">
-                                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
-                                                                    <i class="fa fa-times"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="checkbox" value="" checked>
-                                                                        <span class="form-check-sign"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                                                            </td>
-                                                            <td class="td-actions text-right">
-                                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
-                                                                    <i class="fa fa-times"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="checkbox" checked>
-                                                                        <span class="form-check-sign"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                            <td>Create 4 Invisible User Experiences you Never Knew About</td>
-                                                            <td class="td-actions text-right">
-                                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
-                                                                    <i class="fa fa-times"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="checkbox" value="">
-                                                                        <span class="form-check-sign"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                            <td>Read "Following makes Medium better"</td>
-                                                            <td class="td-actions text-right">
-                                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
-                                                                    <i class="fa fa-times"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="checkbox" value="" disabled>
-                                                                        <span class="form-check-sign"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                            <td>Unfollow 5 enemies from twitter</td>
-                                                            <td class="td-actions text-right">
-                                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
-                                                                    <i class="fa fa-times"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer ">
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                <input type="submit" value="Lọc">
+                            </form>
                         </div>
-                    </c:if>
+                        <table border="1">
+                            <th>STT</th>
+                            <th>Tên</th>
+                            <th>Mệnh giá</th>
+                            <th>Số lượng</th>
+                            <th>Nhà mạng</th>
+                            <th>Mô tả</th>
+                            <th>Ngày bắt đầu bán</th>
+                            <th>Xem chi tiết</th>
+                            <th>Chỉnh sửa </th>
+                                <c:forEach items="${list}" var="p">
+                                <tr>
+                                    <td>${p.id}</td>
+                                    <td>${p.name}</td>
+                                    <td><fmt:formatNumber value="${p.sellPrice}" pattern="#,##0" /></td>
+                                    <td>${p.amount}</td>
+                                    <td>${p.supplier}</td>
+                                    <td>${p.description}</td>
+                                    <td>${p.createdAt}</td>
+                                    <td><a href="editProduct.jsp?id=${p.id}&name=${p.name}&description=${p.description}">Chỉnh sửa</a></td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                        <form method="GET" id="pageSizeForm" onchange="submitForm()">
+                            <label for="page-size">Hiển thị:</label>
+                            <select id="page-size" name="sl">
+                                <option value="3" ${limit == 3 ? 'selected' : ''}>3</option>
+                                <option value="5" ${limit == 5 ? 'selected' : ''}>5</option>
+                                <option value="10" ${limit == 10 ? 'selected' : ''}>10</option>
+                            </select>
+                        </form>
+                        <form method="GET" id="pageNumberForm" onchange="submitForm()">
+                            <label for="page-number">Trang:</label>
+                            <input type="text" id="page-number" name="page" value="${page}" oninput="return handlePageNumber(event)">
+                            <span>/</span>
+                            <span>${soTrang}</span>
+                            <input type="hidden" name="sl" value="${limit}">
+
+                            <a class="${i == page ? 'active' : ''}" href="manageProduct?page=${i}">${i}</a><br>
+                            <!--<a href="addOneProduct.jsp">Thêm sản phẩm </a>-->
+
+                        </c:if>
+                        <c:if test="${check==3}">
+                            <div class="form-container">
+                                <form action="adminTransaction" method="get">
+                                    <h5>Lọc theo mệnh giá mua</h5>
+                                    <hr  width="100%" align="center" />
+
+                                    <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                        <input type="checkbox" value="Tất cả giá" checked>Tất cả giá
+                                        <c:forEach items="${prices}" var="p">
+                                            <input type="checkbox" id="${p}" name="${p}" value="${p}">${p}
+                                        </c:forEach>
+                                    </div>
+                                    <h5>Lọc theo nhà mạng</h5>
+                                    <hr  width="100%" align="center" />
+
+                                    <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                        <input type="checkbox" checked>Tất cả nhà mạng
+
+                                        <c:forEach items="${suppliers}" var="p">
+                                            <br><input type="checkbox" id="${p.supplier}" name="${p.supplier}" value="${p.supplier}">${p.supplier}
+                                        </c:forEach>
+                                    </div>
+
+                                    <h5>Lọc tên tài khoản</h5>
+                                    <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                        <input type="text" name="accountName" value="${accountName}">
+
+                                    </div>
+                                    <input type="submit" value="Lọc">
+                                </form>
+                            </div>
+
+                            <table border="1">
+                                <th>id</th>
+                                <th>buyPrice</th>
+                                <th>buyAmount</th>
+                                <th>createdAt</th>
+                                <th>description</th>
+                                <th>accountId</th>
+                                <th>Details</th>
+                                    <c:forEach items="${transactions}" var="p">
+                                    <tr>
+                                        <td>${p.id}</td>
+                                        <td>${p.buyPrice}</td>
+                                        <td>${p.buyAmount}</td>
+                                        <td>${p.createdAt}</td>
+                                        <td>${p.description}</td>
+                                        <td>${p.accountId}</td>
+                                        <td><a class="btn btn-primary detail-link" data-id="${p.id}" href="#" onclick="showAnotherForm(event)">Xem chi tiết</a></td>
+
+                                    </tr>
+                                </c:forEach>           
+                            </table>
+                            <form method="GET" id="pageSizeForm" onchange="submitForm()">
+                                <label for="page-size">Hiển thị:</label>
+                                <select id="page-size" name="sl">
+                                    <option value="3" ${limit == 3 ? 'selected' : ''}>3</option>
+                                    <option value="5" ${limit == 5 ? 'selected' : ''}>5</option>
+                                    <option value="10" ${limit == 10 ? 'selected' : ''}>10</option>
+                                </select>
+                            </form>
+
+
+
+                            <form method="GET" id="pageNumberForm" onchange="submitForm()">
+                                <label for="page-number">Trang:</label>
+                                <input type="text" id="page-number" name="page" value="${page}" oninput="handlePageNumber(event)">
+                                <span>/</span>
+                                <span>${soTrang}</span>
+                                <input type="hidden" name="sl" value="${limit}">
+
+                                <a class="${i == page ? 'active' : ''}" href="adminTransaction?page=${i}">${i}</a>
+
+
+                            </form>
+                            <%@include file="historyDetailForm.jsp" %>
+                        </c:if>
+
+                        <c:if test="${check==1}">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card ">
+                                            <div class="card-header ">
+                                                <h4 class="card-title">Email Statistics</h4>
+                                                <p class="card-category">Last Campaign Performance</p>
+                                            </div>
+                                            <div class="card-body ">
+                                                <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
+                                                <div class="legend">
+                                                    <i class="fa fa-circle text-info"></i> Open
+                                                    <i class="fa fa-circle text-danger"></i> Bounce
+                                                    <i class="fa fa-circle text-warning"></i> Unsubscribe
+                                                </div>
+                                                <hr>
+                                                <div class="stats">
+                                                    <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card ">
+                                            <div class="card-header ">
+                                                <h4 class="card-title">Users Behavior</h4>
+                                                <p class="card-category">24 Hours performance</p>
+                                            </div>
+                                            <div class="card-body ">
+                                                <div id="chartHours" class="ct-chart"></div>
+                                            </div>
+                                            <div class="card-footer ">
+                                                <div class="legend">
+                                                    <i class="fa fa-circle text-info"></i> Open
+                                                    <i class="fa fa-circle text-danger"></i> Click
+                                                    <i class="fa fa-circle text-warning"></i> Click Second Time
+                                                </div>
+                                                <hr>
+                                                <div class="stats">
+                                                    <i class="fa fa-history"></i> Updated 3 minutes ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card ">
+                                            <div class="card-header ">
+                                                <h4 class="card-title">2023 Sale Card</h4>
+                                                <p class="card-category">All products </p>
+                                            </div>
+                                            <div class="card-body ">
+                                                <div id="chartActivity" class="ct-chart"></div>
+                                            </div>
+                                            <div class="card-footer ">
+                                                <div class="legend">
+                                                    <i class="fa fa-circle text-info"></i> Viettel
+                                                    <i class="fa fa-circle text-danger"></i> Mobiphone
+                                                </div>
+                                                <hr>
+                                                <div class="stats">
+                                                    <i class="fa fa-check"></i> Data information certified
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card  card-tasks">
+                                            <div class="card-header ">
+                                                <h4 class="card-title">Tasks</h4>
+                                                <p class="card-category">Backend development</p>
+                                            </div>
+                                            <div class="card-body ">
+                                                <div class="table-full-width">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="checkbox" value="">
+                                                                            <span class="form-check-sign"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>Sign contract for "What are conference organizers afraid of?"</td>
+                                                                <td class="td-actions text-right">
+                                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="checkbox" value="" checked>
+                                                                            <span class="form-check-sign"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
+                                                                <td class="td-actions text-right">
+                                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="checkbox" value="" checked>
+                                                                            <span class="form-check-sign"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
+                                                                </td>
+                                                                <td class="td-actions text-right">
+                                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="checkbox" checked>
+                                                                            <span class="form-check-sign"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>Create 4 Invisible User Experiences you Never Knew About</td>
+                                                                <td class="td-actions text-right">
+                                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="checkbox" value="">
+                                                                            <span class="form-check-sign"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>Read "Following makes Medium better"</td>
+                                                                <td class="td-actions text-right">
+                                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="checkbox" value="" disabled>
+                                                                            <span class="form-check-sign"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>Unfollow 5 enemies from twitter</td>
+                                                                <td class="td-actions text-right">
+                                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-link">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-link">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer ">
+                                                <hr>
+                                                <div class="stats">
+                                                    <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:if>
                 </div>
                 <footer class="footer">
                     <div class="container-fluid">
@@ -552,59 +837,20 @@
     <script src="assets/js/light-bootstrap-dashboard.js" type="text/javascript"></script>
     <script src="assets/js/demo.js"></script>
     <script type="text/javascript">
-                                $(document).ready(function () {
-                                    // Javascript method's body can be found in assets/js/demos.js
-                                    demo.initDashboardPageCharts();
+                                    $(document).ready(function () {
+                                        // Javascript method's body can be found in assets/js/demos.js
+                                        demo.initDashboardPageCharts();
 
-                                    demo.showNotification();
+                                        demo.showNotification();
 
-                                });
+                                    });
     </script>
     <script>
-            function showAnotherForm(event) {
-                event.preventDefault(); // Prevent the default link behavior
-                var id = $(event.target).data('id'); // Get the ID from the data attribute
-                var url = 'detailHistory?id=' + id; // Construct the URL
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (response) {
-                        displayCards(response);
-                        console.log(response);
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle any errors that occur during the AJAX request
-                        console.error(error);
-                    }
-                });
-                function displayCards(response) {
-                    var anotherFormContainer = document.getElementById("anotherFormContainer");
-                    anotherFormContainer.style.display = "block";
-                    var product = response.product;
-                    var listCard = response.listCard;
-                    // Display product details
 
-                    // Display card details
-                    var table = $('#cardTable');
-                    for (var i = 0; i < listCard.length; i++) {
-                        var card = listCard[i];
-                        var row = $('<tr></tr>');
-                        row.append('<td>' + card.seri + '</td>');
-                        row.append('<td>' + card.code + '</td>');
-                        // Add more table cells for additional card properties
-                        table.append(row);
-                    }
-                    
-                    $('#menhGia').text(product.sellPrice);
-                    $('#nhaMang').text(product.supplier);
-                    $('#date').text(product.expirationDate);
-                }
-            }
 
             function saveSelectedOption() {
                 var select = document.getElementById('mySelect');
                 var selectedOption = select.value;
-
                 // Lưu giá trị vào local storage
                 localStorage.setItem('selectedOption', selectedOption);
             }
@@ -613,15 +859,61 @@
             window.onload = function () {
                 var select = document.getElementById('mySelect');
                 var selectedOption = localStorage.getItem('selectedOption');
-
                 if (selectedOption) {
                     select.value = selectedOption;
                 }
             };
-            function submitForm() {
-                var form = document.getElementById('myForm');
-                form.submit();
+
+            if (pageNumberValue) {
+                document.getElementById("page-number").value = pageNumberValue;
             }
+
+            function submitForm() {
+                document.getElementById("pageSizeForm").submit();
+                document.getElementById("pageNumberForm").submit;
+                localStorage.setItem('pageNumber', pageNumber);
+            }
+
+            if (pageNumberValue1) {
+                document.getElementById("page-number1").value = pageNumberValue1;
+            }
+            function submitForm1() {
+                document.getElementById("pageSizeForm1").submit();
+                document.getElementById("pageNumberForm1").submit;
+                localStorage.setItem('pageNumber1', pageNumber1);
+            }
+
+
+
+            function handlePageNumber(event) {
+                const pageNumberInput = document.getElementById('page-number');
+                let pageNumber = parseInt(pageNumberInput.value);
+                const maxPage = parseInt('${soTrang}');
+
+                if (isNaN(pageNumber) || pageNumber < 1) {
+                    pageNumber = 1;
+                } else if (pageNumber > maxPage) {
+                    pageNumber = maxPage;
+                }
+
+                pageNumberInput.value = pageNumber;
+            }
+            ;
+
+            function handlePageNumber1(event) {
+                const pageNumberInput1 = document.getElementById('page-number1');
+                let pageNumber1 = parseInt(pageNumberInput1.value);
+                const maxPage = parseInt('${soTrang}');
+
+                if (isNaN(pageNumber1) || pageNumber1 < 1) {
+                    pageNumber1 = 1;
+                } else if (pageNumber1 > maxPage) {
+                    pageNumber1 = maxPage;
+                }
+
+                pageNumberInput1.value = pageNumber1;
+            }
+
 
     </script>
 

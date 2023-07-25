@@ -3,22 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package process;
+package controller;
 
+import dao.ListBuyOfShopDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-//import Model.InforUser;
 
 /**
  *
- * @author asus
+ * @author caoqu
  */
-public class AddOneProduct extends HttpServlet {
+@WebServlet(name="ImportServlet", urlPatterns={"/importServlet"})
+public class ImportServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +36,10 @@ public class AddOneProduct extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddOneProduct</title>");  
+            out.println("<title>Servlet ImportServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddOneProduct at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ImportServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,33 +56,10 @@ public class AddOneProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id_raw = request.getParameter("addonepro");
-        String quanti = request.getParameter("quantity");
-        int id,quantity;
-        
-//        try {
-//            id = Integer.parseInt(id_raw);
-//            quantity = Integer.parseInt(quanti);
-//            HttpSession session = request.getSession();
-//            InforUser iu = (InforUser) session.getAttribute("infor");
-//            //response.sendRedirect("list");
-//            if (iu == null) {
-//                response.sendRedirect("login");
-//            } else {
-//                int r = p.getProduct(id).getQuantity();
-//                int i = cdb.getCartByIdProcductAndUser(iu.username, id).getId();
-//                
-//                if (quantity+1 >= r) {
-//                    cdb.updateCart(i,iu.username,id,r);
-//                } else {
-//                    cdb.updateCart(i,iu.username,id,quantity+1);
-//                }
-//            }
-//
-//        } catch (NumberFormatException e) {
-//            System.out.println(e);
-//        }
-//        response.sendRedirect("cart");
+        ListBuyOfShopDAO lb = new ListBuyOfShopDAO();
+        request.setAttribute("suppliers",lb.getAllSupplier() );
+        request.setAttribute("prices", lb.getAllPrice());
+        request.getRequestDispatcher("/import.jsp").forward(request, response);
     } 
 
     /** 

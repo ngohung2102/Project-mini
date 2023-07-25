@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,127 +49,222 @@
             }
 
         </style>
-        <script>
-            function showAnotherForm(event) {
-
-                event.preventDefault(); // Prevent the default link behavior
-                var id = $(event.target).data('id'); // Get the ID from the data attribute
-                var url = 'detailHistory?id=' + id; // Construct the URL
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (response) {
-                        displayCards(response);
-                        console.log(response);
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle any errors that occur during the AJAX request
-                        console.error(error);
-                    }
-                });
-                function displayCards(response) {
-                    var anotherFormContainer = document.getElementById("anotherFormContainer");
-                    anotherFormContainer.style.display = "block";
-                    var product = response.product;
-                    var listCard = response.listCard;
-                    // Display product details
-
-                    // Display card details
-                    var table = $('#cardTable');
-                    for (var i = 0; i < listCard.length; i++) {
-                        var card = listCard[i];
-                        var row = $('<tr></tr>');
-                        row.append('<td>' + card.seri + '</td>');
-                        row.append('<td>' + card.code + '</td>');
-                        // Add more table cells for additional card properties
-                        table.append(row);
-                    }
-                    $('#menhGia').text(product.sellPrice);
-                    $('#nhaMang').text(product.supplier);
-                    $('#date').text(product.expirationDate);
-                }
-
+        <style>
+            #formOverlay139 {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
+            #formContainer {
+                background-color: #fff;
+                padding: 20px;
+                position: relative; /* Add this property */
+            }
 
-        </script>
-    </head>
+            #closeButton {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+                font-size: 24px; /* Add this property */
+            }
+            /* Add this CSS to hide the checkbox inputs */
+        </style>
 
-    <body>
-        <%@include file="header.jsp" %>
-        <div class="container-xxl position-relative bg-white d-flex p-0">
 
 
-            <!-- Content Start -->
-            <div class="content" style="margin-left: 120px;">
+    </script>
+</head>
 
-                <!-- Table Start -->
-                <div class="container-fluid pt-4 px-4">
-                    <div class="row g-4">
+<body>
+    <script>
+        $(document).ready(function () {
+            $('#page-size').change(function () {
+                var page_size = $(this).val();
+                var current_url = window.location.href;
 
-                        <div class="col-12">
-                            <div class="bg-light rounded h-100 p-4">
-                                <h6 class="mb-4">My All Bill >> Have ${requestScope.sizemybill} bills</h6>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
+                // Tạo một đối tượng FormData từ form hiện tại
+                var form_data = new FormData($('#my-form')[0]);
+
+                // Thêm giá trị limit mới vào FormData
+                form_data.append('sl', page_size);
+
+                // Sử dụng AJAX để gửi yêu cầu và nhận kết quả từ phía máy chủ
+                $.ajax({
+                    url: current_url,
+                    type: 'GET',
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        $('#content').html(result);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+
+    </script>
+    <%@include file="header.jsp" %>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+
+        <form id="form1" action="myhistorybill" method="get" style="margin-left: 100px;">
+            <h5>Lọc theo mệnh giá mua</h5>
+            <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                <input type="checkbox" value="Tất cả giá">Tất cả giá
+                <br>
+                <c:forEach items="${prices}" var="p">
+                    <input type="checkbox" id="${p}" name="${p}" value="${p}">${p}<br>
+                </c:forEach>
+            </div>
+            <!--                <h5>Lọc theo ngày mua</h5>
+                            <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                                <input type="checkbox" class="custom-control-input" checked id="price-all">
+                                <label class="custom-control-label" for="price-all">Tất cả ngày</label>
+            
+                            </div>-->
+            <h5>Lọc theo nhà mạng</h5>
+            <div class="custom-control custom-checkbox align-items-center justify-content-between mb-3">
+                <input type="checkbox">Tất cả nhà mạng
+
+                <c:forEach items="${suppliers}" var="p">
+                    <br><input type="checkbox" id="${p.supplier}" name="${p.supplier}" value="${p.supplier}">${p.supplier}
+                </c:forEach>
+            </div>
+            <input type="submit" value="Lọc">
+        </form>
+
+        <!-- Content Start -->
+        <div class="content" style="margin-left: 120px;">
+
+            <!-- Table Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+
+                    <div class="col-12">
+                        <div class="bg-light rounded h-100 p-4">
+                            <!--<h6 class="mb-4">My All Bill Have ${requestScope.sizemybill} bills</h6>-->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Mệnh giá</th>
+                                            <th scope="col">Số lượng</th>
+                                            <th scope="col">Ngày mua</th>
+                                            <th scope="col">Nhà mạng</th>
+                                            <th scope="col">Trạng thái</th>
+                                            <th scope="col">Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${requestScope.list}" var="db">
                                             <tr>
-                                                <th scope="col">STT</th>
-                                                <th scope="col">Mệnh giá</th>
-                                                <th scope="col">Số lượng</th>
-                                                <th scope="col">Ngày mua</th>
-                                                <th scope="col">Nhà mạng</th>
-                                                <th scope="col">Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${requestScope.list}" var="db">
-                                                <tr>
-                                                    <td>${db.id}</td>
-                                                    <td>${db.buyPrice}</td>
-                                                    <td>${db.buyAmount}</td>
-                                                    <td>${db.createdAt}</td>
-                                                    <td>${db.description}</td>
+                                                <td>${db.id}</td>
+                                                <td><fmt:formatNumber value="${db.buyPrice}" pattern="#,##0" /></td>
+                                                <td>${db.buyAmount}</td>
+                                                <td>${db.createdAt}</td>
+                                                <td>${db.description}</td>
+
+                                                <c:if test="${db.status==true}">
+                                                    <td>Thành công</td>
                                                     <td><a class="btn btn-primary detail-link" data-id="${db.id}" href="#" onclick="showAnotherForm(event)">Xem chi tiết</a>
                                                     </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                    <%@include file="historyDetailForm.jsp" %>
+                                                </c:if >
+                                                <c:if test="${db.status==false}">
+                                                    <td>Thất bại do <br>
+                                                        hết hàng</td>
+                                                    </c:if>
 
-                                    <c:forEach begin="${1}" end="${soTrang}" var="i">
-                                        <a class="${i==page?"active":""}" href="myhistorybill?page=${i}"> ${i} </a>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                                <%@include file="historyDetailForm.jsp" %>
+                                <form method="GET" id="pageSizeForm" onchange="submitForm()">
+                                    <label for="page-size">Hiển thị:</label>
+                                    <select id="page-size" name="sl">
+                                        <option value="3" ${limit == 3 ? 'selected' : ''}>3</option>
+                                        <option value="5" ${limit == 5 ? 'selected' : ''}>5</option>
+                                        <option value="10" ${limit == 10 ? 'selected' : ''}>10</option>
+                                    </select>
+                                </form>
 
-                                    </c:forEach>  
-                                    <form method="GET" id="myForm" onchange="submitForm()" >
-                                        <label for="page-size">Hiển thị:</label>
-                                        <select id="page-size" name="sl">
-                                            <option value="3" ${limit == 3 ? 'selected' : ''}>3</option>
-                                            <option value="5" ${limit == 5 ? 'selected' : ''}>5</option>
-                                            <option value="10" ${limit == 10 ? 'selected' : ''}>10</option>
-                                        </select>
-                                        <!--                                        <input type="submit" value="Áp dụng">-->
-                                        <!--<button type="button" >Submit</button>-->
-                                    </form>
-                                </div>
+
+
+                                <form method="GET" id="pageNumberForm" onchange="submitForm()">
+                                    <label for="page-number">Trang:</label>
+                                    <input type="text" id="page-number" name="page" value="${page}" oninput="handlePageNumber(event)">
+                                    <span>/</span>
+                                    <span>${soTrang}</span>
+                                    <input type="hidden" name="sl" value="${limit}">
+                                    <a class="${i == page ? 'active' : ''}" href="myhistorybill?page=${i}">${i}</a>
+                                </form>
+                                <!--                                        <input type="submit" value="Áp dụng">-->
+                                <!--<button type="button" >Submit</button>-->
                             </div>
                         </div>
                     </div>
+                </div>
 
+            </div>
+        </div>
+        <c:if test="${status != null}">
+            <div id="formOverlay139">
+                <div id="formContainer">
+                    <span id="closeButton" onclick="closeForm123()">&times;</span>
+
+                    <form action="/your-action-url" method="POST">
+
+                        <c:if test="${listCard.size()!=0}">
+                            <p>Thẻ đã mua thành công</p>
+                            <p>${product.supplier}</p>
+                            <p>${product.sellPrice}</p>
+                            <p>${listCard.size()}</p>
+                            <p>${product.expirationDate}</p>
+                            <div style="overflow-y : scroll;height:400px;width:600px;position: relative ">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <th>Seri</th>
+                                        <th>Code</th>
+                                    </tr>
+                                    <c:forEach items="${listCard}" var="c">
+                                        <tr>
+                                            <td>${c.seri}</td>
+                                            <td>${c.code}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
+
+                        </c:if>
+                        <c:if test="${listCard.size()==0}">
+                            <p>Mua thẻ không thành công do hết hàng</p>
+                        </c:if>
+
+                        <!-- Other form elements or inputs can be added here -->
+
+                    </form>
                 </div>
             </div>
-            <!-- Table End -->
-
-
-        </div>
-        <!-- Content End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        </c:if>
     </div>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <script>
+        function closeForm123() {
+            document.getElementById("formOverlay139").style.display = "none";
+        }
+    </script>
     <%@include file="footer.jsp" %>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -185,27 +282,46 @@
     <script src="js/main.js"></script>
     <script>
 
-                                        function saveSelectedOption() {
-                                            var select = document.getElementById('mySelect');
-                                            var selectedOption = select.value;
+        function saveSelectedOption() {
+            var select = document.getElementById('mySelect');
+            var selectedOption = select.value;
+            // Lưu giá trị vào local storage
+            localStorage.setItem('selectedOption', selectedOption);
+        }
 
-                                            // Lưu giá trị vào local storage
-                                            localStorage.setItem('selectedOption', selectedOption);
-                                        }
+        // Khôi phục giá trị lựa chọn từ local storage khi tải lại trang
+        window.onload = function () {
+            var select = document.getElementById('mySelect');
+            var selectedOption = localStorage.getItem('selectedOption');
+            if (selectedOption) {
+                select.value = selectedOption;
+            }
+        };
 
-// Khôi phục giá trị lựa chọn từ local storage khi tải lại trang
-                                        window.onload = function () {
-                                            var select = document.getElementById('mySelect');
-                                            var selectedOption = localStorage.getItem('selectedOption');
+        if (pageNumberValue) {
+            document.getElementById("page-number").value = pageNumberValue;
+        }
+        function submitForm() {
+            document.getElementById("pageSizeForm").submit();
+            document.getElementById("pageNumberForm").submit;
+            localStorage.setItem('pageNumber', pageNumber);
+        }
 
-                                            if (selectedOption) {
-                                                select.value = selectedOption;
-                                            }
-                                        };
-                                        function submitForm() {
-                                            var form = document.getElementById('myForm');
-                                            form.submit();
-                                        }
+
+
+        function handlePageNumber(event) {
+            const pageNumberInput = document.getElementById('page-number');
+            let pageNumber = parseInt(pageNumberInput.value);
+            const maxPage = parseInt('${soTrang}');
+
+            if (isNaN(pageNumber) || pageNumber < 1) {
+                pageNumber = 1;
+            } else if (pageNumber > maxPage) {
+                pageNumber = maxPage;
+            }
+
+            pageNumberInput.value = pageNumber;
+        }
 
     </script>
 </body>

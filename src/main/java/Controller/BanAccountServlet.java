@@ -3,20 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package process;
+package controller;
 
+import dao.AccountDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author asus
+ * @author PC
  */
-public class FixStatusServlet extends HttpServlet {
+@WebServlet(name="BanAccountServlet", urlPatterns={"/ban"})
+public class BanAccountServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,10 +37,10 @@ public class FixStatusServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FixStatusServlet</title>");  
+            out.println("<title>Servlet BanAccountServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FixStatusServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet BanAccountServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -53,7 +57,14 @@ public class FixStatusServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("mycustomerbill.jsp").forward(request, response);
+        String account = request.getParameter("account");
+        String ban =request.getParameter("ban");
+        AccountDAO acc = new AccountDAO();
+        acc.banAccount(account,ban);
+        request.setAttribute("check", 4);
+        request.setAttribute("list", new AccountDAO().listAll());
+        RequestDispatcher rd = request.getRequestDispatcher("dashboard.jsp");
+        rd.forward(request, response);
     } 
 
     /** 
@@ -66,21 +77,7 @@ public class FixStatusServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id = request.getParameter("statusx");
-        String ix = request.getParameter("ix");
-        int status,idx;
-//        HistoryDAO hd = new HistoryDAO();
-//        try {
-//            idx = Integer.parseInt(ix);
-//            status = Integer.parseInt(id);
-//            Status ex = new Status(status,"");
-//            HistoryBuy hisb = hd.getBuyId(idx);
-//            hisb.setStatus(ex);
-//            hd.update(hisb);
-//            response.sendRedirect("mycustomerbill");
-//        } catch (NumberFormatException e) {
-//            System.out.println(e);
-//        }
+        processRequest(request, response);
     }
 
     /** 
